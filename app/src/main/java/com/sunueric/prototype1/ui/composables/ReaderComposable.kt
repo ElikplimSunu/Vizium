@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,13 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,9 +32,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -57,7 +55,6 @@ import java.io.File
 import java.io.IOException
 import java.util.UUID
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ReaderScreen() {
     val context = LocalContext.current
@@ -193,8 +190,9 @@ private fun DisplayingExtractedText() {
     }
 }
 
-/** This is an asychronous function that is used to extract text from pdf.
- *  @param path is the path of the pdf file.
+/** This is an asynchronous function that is used to extract text from pdf.
+ *  @param pdfPath is the path of the pdf file.
+ *  @param callback is the function that is called when the text is extracted.
  *  @return the extracted text from pdf.
  **/
 private suspend fun fetchOcrText(pdfPath: String, callback: (String) -> Unit) {
@@ -203,7 +201,7 @@ private suspend fun fetchOcrText(pdfPath: String, callback: (String) -> Unit) {
         try {
             text = extractTextFromPdf(pdfPath)
         } catch (e: IOException) {
-            // Handle any exceptions here if needed
+
             e.printStackTrace()
         }
 
@@ -215,11 +213,11 @@ private suspend fun fetchOcrText(pdfPath: String, callback: (String) -> Unit) {
 
 /** This is an extension function that is used to extract text from pdf.
  *  It waits for the fetchOcrText function to finish and then returns the text.
- *  @param path is the path of the pdf file.
+ *  @param pdfPath is the path of the pdf file.
  *  @return the extracted text from pdf.
  **/
 @Composable
-fun DisplayPdfText(pdfPath: String): Unit {
+fun DisplayPdfText(pdfPath: String) {
     var loading by remember { mutableStateOf(true) }
     var ocrText by remember { mutableStateOf("") }
 
@@ -266,7 +264,7 @@ fun extractTextFromPdf(path: String): String {
 
         val pdfReader = PdfReader(path)
 
-        val n = pdfReader.numberOfPages
+        val totalNumberOfPages = pdfReader.numberOfPages
 
         // Loop through each page and extract the text.
         for (pageNumber in 1..1) {
@@ -286,9 +284,6 @@ fun extractTextFromPdf(path: String): String {
     return extractedText
 }
 
-private const val playIcon = 1
-private const val pauseIcon = 2
-
 @Composable
 fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContext,
                        isPlaying: Boolean,
@@ -302,38 +297,45 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
     var startPosition by remember { mutableIntStateOf(0) }
     var spokenWordIndex by remember { mutableIntStateOf(0) }
 
-    OutlinedButton(
-        modifier = Modifier
-            .size(72.dp),
-        shape = CircleShape,
-        //contentPadding = PaddingValues(12.dp),
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 10.dp,
-            pressedElevation = 10.dp
-        ),
-        colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Color.White
-        ),
-        border = BorderStroke(0.dp, Color.Transparent),
-        onClick = {
-            if (isPlaying) {
-            pauseText(mediaPlayer, scope, onTogglePlayPause)
-            startPosition = mediaPlayer.currentPosition
-            spokenWordIndex = computeWordIndex(readerText, startPosition)
-        } else {
-            if (audioFilePath.isEmpty()) {
-                audioFilePath = generateSpeechAudio(context, tts, readerText)
-            }
-            playText(mediaPlayer, audioFilePath, scope, startPosition, spokenWordIndex, onTogglePlayPause)
-        }
-        }
+    Box(
+        modifier = Modifier.size(72.dp),
+        contentAlignment = Alignment.Center
     ) {
-        when (isPlaying) {
-            true -> {
-                SetPlayPauseButtonIcons(icon = R.drawable.baseline_pause_circle_outline_24, iconDescription = "Pause speech")
-            }
-            false -> {
-                SetPlayPauseButtonIcons(icon = R.drawable.play_button, iconDescription = "Play Song")
+        IconButton(
+            modifier = Modifier.fillMaxSize(),
+            onClick = {
+                if (isPlaying) {
+                    pauseText(mediaPlayer, scope, onTogglePlayPause)
+                    startPosition = mediaPlayer.currentPosition
+                    spokenWordIndex = computeWordIndex(readerText, startPosition)
+                } else {
+                    if (audioFilePath.isEmpty()) {
+                        audioFilePath = generateSpeechAudio(context, tts, readerText)
+                    }
+                    playText(
+                        mediaPlayer,
+                        audioFilePath,
+                        scope,
+                        startPosition,
+                        spokenWordIndex,
+                        onTogglePlayPause
+                    )
+                }
+            }) {
+            when (isPlaying) {
+                true -> {
+                    SetPlayPauseButtonIcons(
+                        icon = R.drawable.baseline_pause_circle_outline_24,
+                        iconDescription = "Pause speech"
+                    )
+                }
+
+                false -> {
+                    SetPlayPauseButtonIcons(
+                        icon = R.drawable.play_button,
+                        iconDescription = "Play Song"
+                    )
+                }
             }
         }
     }
@@ -345,12 +347,12 @@ private fun SetPlayPauseButtonIcons(
     icon: Int,
     iconDescription: String
 ) {
-    Icon(
-        modifier = Modifier
-            .fillMaxSize(),
+    Image(
         painter = painterResource(id = icon),
         contentDescription = iconDescription,
-        tint = Color(0xFF68769F)
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Inside,
+        colorFilter = ColorFilter.tint(Color(0xFF68769F))
     )
 }
 

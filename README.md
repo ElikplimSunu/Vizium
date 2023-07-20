@@ -7,6 +7,8 @@ This is a prototype android application that leverages on the android text to sp
 
 *Empowering Visually Impaired Learners with Inclusive Education*
 
+  <img align="center" alt="Basic Education App" src="[https://cdn.dribbble.com/users/1059583/screenshots/4171367/coding-freak.gif](https://stineheilmann.dk/wp-content/uploads/Ghana-School-children.jpg)" />
+  
 ## Introduction
 
 Welcome to the Ghanaian education App for the Blind! Our desire is to empower visually impaired students in Ghanaian Basic Schools with an inclusive and handy platform for gaining knowledge for learning. With a focus on accessibility, usability, and complete curriculum insurance, our app gives educational materials in audio and text-to-speech formats, supporting diverse learning modules. This modern app seeks to break limitations and provide equal educational opportunities for all students.

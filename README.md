@@ -29,11 +29,9 @@ Welcome to the Ghanaian education App for the Blind! Our desire is to empower vi
 
 1. **Download the App**: Visit our website [www.educationappfortheblind.com](https://www.educationappfortheblind.com) to download the app for your device.
 
-2. **Install and Launch**: Follow the on-screen instructions to install the app. Once installed, click on the app icon to launch it.
+2. **Install and Launch**: Follow the on-screen instructions to install the app. Once installed, click on the app icon to launch it
 
-3. **Create an Account**: Sign up with your email or use your Google or Facebook account to create a personalized account.
-
-4. **Start Learning**: Browse subjects, select your grade, and dive into a world of accessible educational resources!
+3. **Start Learning**: Browse subjects, select your grade, and dive into a world of accessible educational resources!
 
 ## Installation Instructions for Developers
 
@@ -41,7 +39,7 @@ If you're interested in contributing to or exploring the app's code:
 
 1. **Fork the Repository**: Click the "Fork" button at the top right of this repository page to create a copy in your GitHub account.
 
-2. **Clone the Repository**: On your local machine, run `git clone https://github.com/your-username/education-app-for-the-blind.git`.
+2. **Clone the Repository**: On your local machine, run `git clone https://github.com/ElikplimSunu/education-app-for-the-blind.git`.
 
 3. **Install Dependencies**: Navigate to the project directory using `cd education-app-for-the-blind` and run `npm install`.
 

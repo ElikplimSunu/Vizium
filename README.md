@@ -15,11 +15,11 @@ Welcome to the Ghanaian education App for the Blind! Our desire is to empower vi
 
 ## Features
 
-- [] **Inclusive Content**: Accessible textbooks and learning resources in text-to-speech and audio formats.
-- [] **Complete Curriculum Coverage**: Subjects like English, Mathematics, Science, and Social Studies covered comprehensively.
+- [ ] **Inclusive Content**: Accessible textbooks and learning resources in text-to-speech and audio formats.
+- [ ] **Complete Curriculum Coverage**: Subjects like English, Mathematics, Science, and Social Studies covered comprehensively.
 - [x] **Intuitive User Interface**: User-friendly design optimized for screen readers with tactile feedback.
-- [] **Offline Access**: Download materials for learning anytime, anywhere, even without internet.
-- [] **Interactive Learning**: Engage with exercises and quizzes to reinforce understanding.
+- [ ] **Offline Access**: Download materials for learning anytime, anywhere, even without internet.
+- [ ] **Interactive Learning**: Engage with exercises and quizzes to reinforce understanding.
 
 ## Diagram or Video (Optional)
 

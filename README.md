@@ -18,6 +18,9 @@ Welcome to the Ghanaian education App for the Blind! Our desire is to empower vi
 
 ![App Screenshot](app_screenshot.png)
 
+## Languages used
+<img src="https://img.shields.io/badge/nuxt.js-00C58E?style=for-the-badge&logo=nuxt.js&logoColor=white"/> <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D"/> <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" />
+
 ## Features: still in development
 
 - [ ] **Inclusive Content**: Accessible textbooks and learning resources in text-to-speech and audio formats.

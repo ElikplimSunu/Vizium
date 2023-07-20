@@ -7,6 +7,9 @@ This is a prototype android application that leverages on the android text to sp
 
 *Empowering Visually Impaired Learners with Inclusive Education*
 
+<img src="https://img.shields.io/badge/nuxt.js-00C58E?style=for-the-badge&logo=nuxt.js&logoColor=white"/> <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D"/> <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" />
+<br>
+
   <img align="center" alt="Basic Education App" src="[https://cdn.dribbble.com/users/1059583/screenshots/4171367/coding-freak.gif](https://stineheilmann.dk/wp-content/uploads/Ghana-School-children.jpg)" />
   
 ## Introduction

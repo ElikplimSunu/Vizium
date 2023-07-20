@@ -3,7 +3,7 @@ This is a prototype android application that leverages on the android text to sp
 
 ## App development is still in initial stages
 
----
+--
 
 **Education App for the Blind (Ghanaian Basic Education)**
 

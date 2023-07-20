@@ -1,16 +1,14 @@
 package com.sunueric.prototype1.ui.composables
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
-import android.widget.ImageButton
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,26 +16,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,13 +37,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,12 +53,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.IOException
+import java.util.UUID
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ReaderScreen() {
     val context = LocalContext.current
+
+    var isPlaying by remember { mutableStateOf(false) }
 
     val textToSpeech = TextToSpeech(context, null)
 
@@ -145,7 +136,7 @@ fun ReaderScreen() {
                     )
                 }
 
-                PauseAndPlayButton(context, readerText, textToSpeech)
+                PauseAndPlayButton(context, isPlaying, onTogglePlayPause = { isPlaying = it }, readerText)
 
                 IconButton(
                     onClick = {
@@ -300,23 +291,16 @@ private const val pauseIcon = 2
 
 @Composable
 fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContext,
-                       readerText: String, textToSpeech: TextToSpeech = TextToSpeech(context, null)
-) {
+                       isPlaying: Boolean,
+                       onTogglePlayPause: (Boolean) -> Unit,
+                       readerText: String) {
 
     val mediaPlayer = remember { MediaPlayer() }
     val tts = remember { TextToSpeech(context, null) }
     val scope = rememberCoroutineScope()
-    var isPlaying by remember { mutableStateOf(false) }
     var audioFilePath by rememberSaveable { mutableStateOf("") }
     var startPosition by remember { mutableIntStateOf(0) }
     var spokenWordIndex by remember { mutableIntStateOf(0) }
-
-    // This is used to remember the icon of the button
-    // Its values are playIcon, loadingBar, and pauseIcon
-    // Initially display the playIcon
-    var buttonIcon by remember {
-        mutableIntStateOf(playIcon)
-    }
 
     OutlinedButton(
         modifier = Modifier
@@ -332,64 +316,24 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
         ),
         border = BorderStroke(0.dp, Color.Transparent),
         onClick = {
-            textToSpeech.speak(
-                readerText,
-                TextToSpeech.QUEUE_FLUSH,
-                null,
-                "reader_text_placeholder"
-            )
-
-            if (buttonIcon == playIcon) {
-                // If the current icon is play Icon
-                // change it to pause icon
-                buttonIcon = pauseIcon
-            } else if (buttonIcon == pauseIcon) {
-                // If the current icon is pause icon
-                // change it to play icon
-                buttonIcon = playIcon
+            if (isPlaying) {
+            pauseText(mediaPlayer, scope, onTogglePlayPause)
+            startPosition = mediaPlayer.currentPosition
+            spokenWordIndex = computeWordIndex(readerText, startPosition)
+        } else {
+            if (audioFilePath.isEmpty()) {
+                audioFilePath = generateSpeechAudio(context, tts, readerText)
             }
-
-//            when (buttonIcon) {
-//                playIcon -> {
-//                    // If the current icon is play Icon, change it to pause icon and speak the text
-//                    buttonIcon = pauseIcon
-//                    startPosition = textToSpeech.currentPosition
-//                    textToSpeech.speak(readerText, TextToSpeech.QUEUE_FLUSH, null, "reader_text_placeholder")
-//                }
-//                pauseIcon -> {
-//                    // If the current icon is pause Icon, change it to play icon and pause the speech
-//                    buttonIcon = playIcon
-//                    textToSpeech.stop()
-//                }
-//            }
+            playText(mediaPlayer, audioFilePath, scope, startPosition, spokenWordIndex, onTogglePlayPause)
+        }
         }
     ) {
-
-        when (buttonIcon) {
-            playIcon -> {
-                // Set the play icon
-                SetButtonIcons(
-                    icon = R.drawable.play_button,
-                    iconDescription = "Play Song"
-                )
-
-                // If the song is loaded, pause the actual song
-                if (textToSpeech.isSpeaking) {
-                    textToSpeech.stop()
-                }
+        when (isPlaying) {
+            true -> {
+                SetPlayPauseButtonIcons(icon = R.drawable.baseline_pause_circle_outline_24, iconDescription = "Pause speech")
             }
-            pauseIcon -> {
-                // Set the pause icon
-                SetButtonIcons(R.drawable.baseline_pause_circle_outline_24, iconDescription = "Pause speech")
-
-                // If the song is loaded, play the actual song
-                if (!(textToSpeech.isSpeaking)) {
-                    textToSpeech.speak(
-                        readerText,
-                        TextToSpeech.QUEUE_FLUSH,
-                        null,
-                        "reader_text_placeholder")
-                }
+            false -> {
+                SetPlayPauseButtonIcons(icon = R.drawable.play_button, iconDescription = "Play Song")
             }
         }
     }
@@ -397,7 +341,7 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
 
 
 @Composable
-private fun SetButtonIcons(
+private fun SetPlayPauseButtonIcons(
     icon: Int,
     iconDescription: String
 ) {
@@ -409,6 +353,65 @@ private fun SetButtonIcons(
         tint = Color(0xFF68769F)
     )
 }
+
+private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: String): String {
+    val fileDir = context.cacheDir
+    val audioFile = File(fileDir, "${UUID.randomUUID()}.wav")
+    tts.synthesizeToFile(text, null, audioFile, UUID.randomUUID().toString())
+    return audioFile.absolutePath
+}
+
+private fun playText(mediaPlayer: MediaPlayer, filePath: String, scope: CoroutineScope, startPosition: Int, spokenWordIndex: Int, onTogglePlayPause: (Boolean) -> Unit) {
+    mediaPlayer.reset()
+    mediaPlayer.setDataSource(filePath)
+    mediaPlayer.setAudioAttributes(
+        AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+            .build()
+    )
+    try {
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener { mp ->
+            mp.seekTo(startPosition)
+            mp.start()
+
+            scope.launch {
+                mp.setOnCompletionListener {
+                    onTogglePlayPause(false)
+                }
+            }
+
+            onTogglePlayPause(true)
+        }
+    } catch (e: IllegalStateException) {
+        e.printStackTrace()
+    }
+}
+
+private fun pauseText(mediaPlayer: MediaPlayer, scope: CoroutineScope, onTogglePlayPause: (Boolean) -> Unit) {
+    mediaPlayer.pause()
+    onTogglePlayPause(false)
+}
+
+private fun computeWordIndex(text: String, position: Int): Int {
+    val words = text.split(" ")
+    var wordIndex = 0
+    var currentPosition = 0
+    for (word in words) {
+        currentPosition += word.length + 1 // Add 1 for the space character
+        if (currentPosition >= position) {
+            break
+        }
+        wordIndex++
+    }
+    return wordIndex
+}
+
+private fun resumeText(mediaPlayer: MediaPlayer, scope: CoroutineScope) {
+    mediaPlayer.start()
+}
+
 
 
 

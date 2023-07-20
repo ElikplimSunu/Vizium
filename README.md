@@ -56,7 +56,7 @@ We welcome support and contributions from developers, designers, educators, and 
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE.md).
 
 ## Acknowledgements
 

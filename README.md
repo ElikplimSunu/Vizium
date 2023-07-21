@@ -1,5 +1,5 @@
-# Prototype-1
-This is a prototype android application that leverages on the android text to speech engine and also gestures built with jetpack compose and kotlin.
+# VIZIUM
+This is an android application built with Kotlin and Jetpack Compose that leverages on the android text-to-speech engine, gestures and haptics to provide educational materials for the visually impaired. The basic educational materials is based on the Ghana Education Service syllabus.
 
 ## App development is still in initial stages
 

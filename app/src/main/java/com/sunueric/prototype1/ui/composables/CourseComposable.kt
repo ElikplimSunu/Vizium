@@ -14,8 +14,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,83 +57,89 @@ fun CourseScreen(){
 
         Card(
             elevation = CardDefaults.cardElevation(
-                defaultElevation = 20.dp
+                defaultElevation = 8.dp
             ),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
                 .background(color = Color.White)
-
-
         ) {
-            Text(
-                text = "Overview",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                ).copy(lineHeight = 32.sp)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.White)
-                    .combinedClickable(
-                        onClick = {
-                            Toast
-                                .makeText(context, "Single Tap", Toast.LENGTH_SHORT)
-                                .show()
-                        },
+            Column (modifier = Modifier
+                .background(color = Color.White)
+                .combinedClickable(
+                    onClick = {
+                        Toast
+                            .makeText(context, "Single Tap", Toast.LENGTH_SHORT)
+                            .show()
+                    },
 
-                        onDoubleClick = {
-                            Toast
-                                .makeText(
-                                    context,
-                                    "Double Tap",
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-
-                            context.startActivity(
-                                Intent(
-                                    context,
-                                    ReaderActivity::class.java
-                                )
+                    onDoubleClick = {
+                        Toast
+                            .makeText(
+                                context,
+                                "Double Tap",
+                                Toast.LENGTH_SHORT
                             )
-                        },
-                        onLongClick = {
-                            Toast
-                                .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
-                                .show()
+                            .show()
 
-                            vibrateDevice(context)
-
-                            textToSpeech.speak(
-                                "Overview for English Language",
-                                TextToSpeech.QUEUE_FLUSH,
-                                null,
-                                ""
+                        context.startActivity(
+                            Intent(
+                                context,
+                                ReaderActivity::class.java
                             )
+                        )
+                    },
+                    onLongClick = {
+                        Toast
+                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
+                            .show()
 
-                        }
-                    )
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+                        vibrateDevice(context)
+
+                        textToSpeech.speak(
+                            "Overview for English Language",
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            ""
+                        )
+
+                    }
+                )
+                .padding(20.dp)) {
                 Text(
-                    modifier = Modifier.weight(5f), text = "English Language", style = TextStyle(
-                        fontSize = 18.sp,
+                    text = "Overview",
+                    style = TextStyle(
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1B2559)
-                    ).copy(lineHeight = 23.sp)
+                        color = Color.Black
+                    ).copy(lineHeight = 32.sp)
                 )
-                Image(
-                    modifier = Modifier.weight(1f),
-                    painter = painterResource(id = R.drawable.play_button),
-                    contentDescription = "Play course"
-                )
+
+                Spacer(modifier = Modifier.height(19.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.White),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.weight(5f),
+                        text = "English Language",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1B2559)
+                        ).copy(lineHeight = 23.sp)
+                    )
+                    Image(
+                        modifier = Modifier.weight(1f),
+                        painter = painterResource(id = R.drawable.play_button),
+                        contentDescription = "Play overview"
+                    )
+                }
             }
         }
 

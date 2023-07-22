@@ -365,13 +365,17 @@ private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: Strin
 
 private fun playText(mediaPlayer: MediaPlayer, filePath: String, scope: CoroutineScope, startPosition: Int, spokenWordIndex: Int, onTogglePlayPause: (Boolean) -> Unit) {
     mediaPlayer.reset()
-    mediaPlayer.setDataSource(filePath)
-    mediaPlayer.setAudioAttributes(
-        AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-            .build()
-    )
+    try {
+        mediaPlayer.setDataSource(filePath)
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build()
+        )
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
     try {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { mp ->

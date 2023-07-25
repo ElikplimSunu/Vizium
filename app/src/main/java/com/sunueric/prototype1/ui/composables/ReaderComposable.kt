@@ -4,6 +4,8 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +31,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -251,15 +252,13 @@ fun LoadingScreen() {
  *  @return the extracted text from pdf.
  **/
 fun extractTextFromPdf(path: String): String {
-    val pdfReader = PdfReader(path)
-    val totalPageNum = pdfReader.numberOfPages
     val stringBuilder = StringBuilder()
-    // on below line we are creating a
+
     // variable for storing our extracted text
     val extractedText = ""
 
-    // on below line we are running a try and catch block
-    // to handle extract data operation.
+    // try and catch block to handle extract data operation.
+
     try {
 
         val pdfReader = PdfReader(path)
@@ -284,6 +283,15 @@ fun extractTextFromPdf(path: String): String {
     return extractedText
 }
 
+// Define a state for the playback process
+enum class PlaybackState {
+    IDLE, // No audio is being played or generated
+    GENERATING, // Generating the speech audio file
+    PREPARING, // Preparing the MediaPlayer
+    PLAYING, // Playing the audio
+    PAUSED // Paused playback
+}
+
 @Composable
 fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContext,
                        isPlaying: Boolean,
@@ -293,9 +301,11 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
     val mediaPlayer = remember { MediaPlayer() }
     val tts = remember { TextToSpeech(context, null) }
     val scope = rememberCoroutineScope()
-    var audioFilePath by rememberSaveable { mutableStateOf("") }
+    var audioFilePath by remember { mutableStateOf("") }
     var startPosition by remember { mutableIntStateOf(0) }
     var spokenWordIndex by remember { mutableIntStateOf(0) }
+
+
 
     Box(
         modifier = Modifier.size(72.dp),
@@ -310,7 +320,9 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
                     spokenWordIndex = computeWordIndex(readerText, startPosition)
                 } else {
                     if (audioFilePath.isEmpty()) {
-                        audioFilePath = generateSpeechAudio(context, tts, readerText)
+                        audioFilePath = generateSpeechAudio(context, tts, readerText, onSynthesisComplete = {
+                            audioFilePath = it
+                        })
                     }
                     playText(
                         mediaPlayer,
@@ -356,14 +368,46 @@ private fun SetPlayPauseButtonIcons(
     )
 }
 
-private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: String): String {
+private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: String, onSynthesisComplete: (String) -> Unit): String {
     val fileDir = context.cacheDir
     val audioFile = File(fileDir, "${UUID.randomUUID()}.wav")
-    tts.synthesizeToFile(text, null, audioFile, UUID.randomUUID().toString())
+    // Set up utterance progress listener to detect completion or errors during synthesis.
+    val utteranceId1 = UUID.randomUUID().toString()
+    tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+
+        override fun onStart(utteranceId: String) {
+            // Optional: Perform any tasks when synthesis starts.
+            Log.d("ReaderComposable", "Synthesis started for utteranceId: $utteranceId")
+        }
+
+        override fun onDone(utteranceId: String) {
+            // This method will be called when synthesis is completed successfully.
+            if (utteranceId == utteranceId1){
+                onSynthesisComplete(audioFile.absolutePath)
+            }
+        }
+
+        @Deprecated("Deprecated in Java", ReplaceWith(
+            "Log.d(\"ReaderComposable\", \"Error occurred during synthesis: \$utteranceId\")",
+            "android.util.Log"
+        )
+        )
+        override fun onError(utteranceId: String) {
+            // This method will be called if an error occurs during synthesis.
+            // Handle error cases here, if necessary.
+            Log.d("ReaderComposable", "Error occurred during synthesis: $utteranceId")
+
+        }
+    })
+
+    // Start the synthesis and save to the file.
+    tts.synthesizeToFile(text, null, audioFile, utteranceId1)
+
     return audioFile.absolutePath
 }
 
-private fun playText(mediaPlayer: MediaPlayer, filePath: String, scope: CoroutineScope, startPosition: Int, spokenWordIndex: Int, onTogglePlayPause: (Boolean) -> Unit) {
+private fun playText(mediaPlayer: MediaPlayer, filePath: String, scope: CoroutineScope,
+                     startPosition: Int, spokenWordIndex: Int, onTogglePlayPause: (Boolean) -> Unit) {
     mediaPlayer.reset()
     try {
         mediaPlayer.setDataSource(filePath)
@@ -417,10 +461,6 @@ private fun computeWordIndex(text: String, position: Int): Int {
 private fun resumeText(mediaPlayer: MediaPlayer, scope: CoroutineScope) {
     mediaPlayer.start()
 }
-
-
-
-
 
 @Preview (showBackground = true)
 @Composable

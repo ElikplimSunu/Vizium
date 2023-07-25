@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.sunueric.prototype1.ui.composables.LoadingScreen
 import com.sunueric.prototype1.ui.composables.ReaderScreen
 import com.sunueric.prototype1.ui.theme.Prototype1Theme
 

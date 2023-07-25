@@ -252,10 +252,8 @@ fun LoadingScreen() {
  *  @return the extracted text from pdf.
  **/
 fun extractTextFromPdf(path: String): String {
-    val stringBuilder = StringBuilder()
-
     // variable for storing our extracted text
-    val extractedText = ""
+    val stringBuilder = StringBuilder()
 
     // try and catch block to handle extract data operation.
 
@@ -280,16 +278,7 @@ fun extractTextFromPdf(path: String): String {
         e.printStackTrace()
     }
 
-    return extractedText
-}
-
-// Define a state for the playback process
-enum class PlaybackState {
-    IDLE, // No audio is being played or generated
-    GENERATING, // Generating the speech audio file
-    PREPARING, // Preparing the MediaPlayer
-    PLAYING, // Playing the audio
-    PAUSED // Paused playback
+    return stringBuilder.toString()
 }
 
 @Composable
@@ -372,7 +361,7 @@ private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: Strin
     val fileDir = context.cacheDir
     val audioFile = File(fileDir, "${UUID.randomUUID()}.wav")
     // Set up utterance progress listener to detect completion or errors during synthesis.
-    val utteranceId1 = UUID.randomUUID().toString()
+    val utteranceID = UUID.randomUUID().toString()
     tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
 
         override fun onStart(utteranceId: String) {
@@ -382,7 +371,7 @@ private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: Strin
 
         override fun onDone(utteranceId: String) {
             // This method will be called when synthesis is completed successfully.
-            if (utteranceId == utteranceId1){
+            if (utteranceId == utteranceID){
                 onSynthesisComplete(audioFile.absolutePath)
             }
         }
@@ -401,8 +390,7 @@ private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: Strin
     })
 
     // Start the synthesis and save to the file.
-    tts.synthesizeToFile(text, null, audioFile, utteranceId1)
-
+    tts.synthesizeToFile(text, null, audioFile, utteranceID)
     return audioFile.absolutePath
 }
 

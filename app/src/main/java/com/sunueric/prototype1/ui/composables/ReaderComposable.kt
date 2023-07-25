@@ -55,6 +55,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 @Composable
 fun ReaderScreen() {
@@ -63,6 +64,24 @@ fun ReaderScreen() {
     var isPlaying by remember { mutableStateOf(false) }
 
     val textToSpeech = TextToSpeech(context, null)
+
+    // Generate speech audio only once during the initial composition
+    val audioFilePath = remember { mutableStateOf("") }
+
+    // Create a mutable state for the loading state
+    var loading by remember { mutableStateOf(true) }
+
+    val readerText = extractTextFromPdf("assets/creative-arts-primary-4-6gh.pdf")
+
+    LaunchedEffect(Unit) {
+        // Generate the audio file path at the beginning
+        if (audioFilePath.value.isEmpty()) {
+            generateSpeechAudio(context, textToSpeech, readerText).thenAccept { filePath ->
+                audioFilePath.value = filePath
+                loading = false
+            }
+        }
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (cardDesignLeft, cardDesignRight, textCard, playButton) = createRefs()
@@ -110,7 +129,8 @@ fun ReaderScreen() {
             DisplayPdfText(pdfPath = "assets/creative-arts-primary-4-6gh.pdf")
 
         }
-        val readerText = extractTextFromPdf("assets/creative-arts-primary-4-6gh.pdf")
+
+
 
         Box (modifier = Modifier
             .constrainAs(playButton) {
@@ -134,7 +154,7 @@ fun ReaderScreen() {
                     )
                 }
 
-                PauseAndPlayButton(context, isPlaying, onTogglePlayPause = { isPlaying = it }, readerText)
+                PauseAndPlayButton(context, isPlaying, onTogglePlayPause = { isPlaying = it }, readerText, audioFilePath.value)
 
                 IconButton(
                     onClick = {
@@ -156,7 +176,7 @@ fun ReaderScreen() {
 
 // Displaying the extracted text from the pdf
 @Composable
-private fun DisplayingExtractedText() {
+private fun DisplayingExtractedText(readerText: String) {
     Column {
         Text(
             text = "Overview",
@@ -180,7 +200,7 @@ private fun DisplayingExtractedText() {
             )
 
             Text(
-                text = extractTextFromPdf("assets/creative-arts-primary-4-6gh.pdf"),
+                text = readerText,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
@@ -232,7 +252,7 @@ fun DisplayPdfText(pdfPath: String) {
     return if (loading) {
         LoadingScreen()
     } else {
-        DisplayingExtractedText()
+        DisplayingExtractedText(ocrText)
     }
 }
 
@@ -285,12 +305,12 @@ fun extractTextFromPdf(path: String): String {
 fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContext,
                        isPlaying: Boolean,
                        onTogglePlayPause: (Boolean) -> Unit,
-                       readerText: String) {
+                       readerText: String, audioFilePaths:String) {
 
     val mediaPlayer = remember { MediaPlayer() }
     val tts = remember { TextToSpeech(context, null) }
     val scope = rememberCoroutineScope()
-    var audioFilePath by remember { mutableStateOf("") }
+    var audioFilePath = audioFilePaths
     var startPosition by remember { mutableIntStateOf(0) }
     var spokenWordIndex by remember { mutableIntStateOf(0) }
 
@@ -309,18 +329,33 @@ fun PauseAndPlayButton(context: Context = LocalContext.current.applicationContex
                     spokenWordIndex = computeWordIndex(readerText, startPosition)
                 } else {
                     if (audioFilePath.isEmpty()) {
-                        audioFilePath = generateSpeechAudio(context, tts, readerText, onSynthesisComplete = {
-                            audioFilePath = it
-                        })
+                        val future = generateSpeechAudio(context, tts, readerText)
+                        // Wait for the audio file generation to complete
+                        scope.launch {
+                            try {
+                                audioFilePath = future.get()
+                                playText(
+                                    mediaPlayer,
+                                    audioFilePath,
+                                    scope,
+                                    startPosition,
+                                    spokenWordIndex,
+                                    onTogglePlayPause
+                                )
+                            } catch (e: Exception) {
+                                Log.e("ReaderComposable", "Error generating speech audio", e)
+                            }
+                        }
+                    } else {
+                        playText(
+                            mediaPlayer,
+                            audioFilePath,
+                            scope,
+                            startPosition,
+                            spokenWordIndex,
+                            onTogglePlayPause
+                        )
                     }
-                    playText(
-                        mediaPlayer,
-                        audioFilePath,
-                        scope,
-                        startPosition,
-                        spokenWordIndex,
-                        onTogglePlayPause
-                    )
                 }
             }) {
             when (isPlaying) {
@@ -357,41 +392,36 @@ private fun SetPlayPauseButtonIcons(
     )
 }
 
-private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: String, onSynthesisComplete: (String) -> Unit): String {
+private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: String): CompletableFuture<String> {
+    val future = CompletableFuture<String>()
     val fileDir = context.cacheDir
     val audioFile = File(fileDir, "${UUID.randomUUID()}.wav")
     // Set up utterance progress listener to detect completion or errors during synthesis.
     val utteranceID = UUID.randomUUID().toString()
-    tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-
-        override fun onStart(utteranceId: String) {
-            // Optional: Perform any tasks when synthesis starts.
-            Log.d("ReaderComposable", "Synthesis started for utteranceId: $utteranceId")
-        }
-
-        override fun onDone(utteranceId: String) {
-            // This method will be called when synthesis is completed successfully.
-            if (utteranceId == utteranceID){
-                onSynthesisComplete(audioFile.absolutePath)
-            }
-        }
-
-        @Deprecated("Deprecated in Java", ReplaceWith(
-            "Log.d(\"ReaderComposable\", \"Error occurred during synthesis: \$utteranceId\")",
-            "android.util.Log"
-        )
-        )
-        override fun onError(utteranceId: String) {
-            // This method will be called if an error occurs during synthesis.
-            // Handle error cases here, if necessary.
-            Log.d("ReaderComposable", "Error occurred during synthesis: $utteranceId")
-
-        }
-    })
 
     // Start the synthesis and save to the file.
     tts.synthesizeToFile(text, null, audioFile, utteranceID)
-    return audioFile.absolutePath
+
+    tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+        override fun onDone(utteranceId: String) {
+            if (utteranceId == utteranceID) {
+                future.complete(audioFile.absolutePath)
+            }
+        }
+
+        @Deprecated("Deprecated in Java",
+            ReplaceWith("future.completeExceptionally(Exception(\"Error occurred during synthesis: \$utteranceId\"))")
+        )
+        override fun onError(utteranceId: String) {
+            future.completeExceptionally(Exception("Error occurred during synthesis: $utteranceId"))
+        }
+
+        override fun onStart(utteranceId: String) {
+            Log.d("ReaderComposable", "Synthesis started for utteranceId: $utteranceId")
+        }
+    })
+
+    return future
 }
 
 private fun playText(mediaPlayer: MediaPlayer, filePath: String, scope: CoroutineScope,

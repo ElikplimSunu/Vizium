@@ -1,159 +1,78 @@
 package com.sunueric.prototype1.ui.composables
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.speech.tts.TextToSpeech
-import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getSystemService
-import com.sunueric.prototype1.R
-import com.sunueric.prototype1.ui.CourseActivity
-import com.sunueric.prototype1.ui.ReaderActivity
+import androidx.navigation.NavController
+import com.sunueric.prototype1.ui.screens.subjects
 import com.sunueric.prototype1.ui.theme.Prototype1Theme
+import com.sunueric.prototype1.ui.theme.dmSans
+import com.sunueric.prototype1.ui.utils.Screens
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
-fun CourseScreen(){
+fun CoursesScreen (navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFF8FAFB))
     ) {
-        val context = LocalContext.current
-
-        val textToSpeech = TextToSpeech(context, null)
-
-        Card(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            ),
-            shape = RoundedCornerShape(20.dp),
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
                 .background(color = Color.White)
+                .padding(start = 20.dp, end = 20.dp, top = 60.dp, bottom = 25.dp)
         ) {
-            Column (modifier = Modifier
-                .background(color = Color.White)
-                .combinedClickable(
-                    onClick = {
-                        Toast
-                            .makeText(context, "Single Tap", Toast.LENGTH_SHORT)
-                            .show()
-                    },
+            Text(
+                text = "Subjects or Courses",
+                style = TextStyle(
+                    fontFamily = dmSans,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                ).copy(lineHeight = 32.sp)
+            )
 
-                    onDoubleClick = {
-                        Toast
-                            .makeText(
-                                context,
-                                "Double Tap",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-
-                        context.startActivity(
-                            Intent(
-                                context,
-                                ReaderActivity::class.java
-                            )
-                        )
-                    },
-                    onLongClick = {
-                        Toast
-                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
-                            .show()
-
-                        vibrateDevice(context)
-
-                        textToSpeech.speak(
-                            "Overview for English Language",
-                            TextToSpeech.QUEUE_FLUSH,
-                            null,
-                            ""
-                        )
-
-                    }
-                )
-                .padding(20.dp)) {
-                Text(
-                    text = "Overview",
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    ).copy(lineHeight = 32.sp)
-                )
-
-                Spacer(modifier = Modifier.height(19.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.White),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.weight(5f),
-                        text = "English Language",
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1B2559)
-                        ).copy(lineHeight = 23.sp)
-                    )
-                    Image(
-                        modifier = Modifier.weight(1f),
-                        painter = painterResource(id = R.drawable.play_button),
-                        contentDescription = "Play overview"
-                    )
-                }
-            }
+            Text(
+                text = "Select a subject and start learning",
+                style = TextStyle(
+                    fontFamily = dmSans,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF68769F)
+                ).copy(lineHeight = 21.sp)
+            )
         }
 
-        Topics()
+        Courses(navController = navController)
     }
-
-
-
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Topics() {
+fun Courses(navController: NavController) {
 
     val context = LocalContext.current
 
@@ -163,26 +82,26 @@ fun Topics() {
 
     LazyColumn(
         modifier = Modifier
-            .background(color = Color(0xFFF8FAFB)),
+            .background(color = Color(0xFFF8FAFB))
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
 
         state = lazyListState
     ) {
 
-        items(topics) { chunk ->
+        items(subjects) { subject ->
             Column(modifier = Modifier.background(color = Color(0xFFF8FAFB))) {
                 // This is to add a padding to the top of the first item
-                val topicsSize = topics.size - 1
-                when(chunk) {
-                    topics[0] -> ListItem(context, textToSpeech, chunk, 20, activity = CourseActivity())
-                    topics[topicsSize] -> ListItem(context, textToSpeech, chunk, 0, 20, activity = CourseActivity())
-                    else -> ListItem(context, textToSpeech, chunk, activity = CourseActivity())
+                val subjectsSize = subjects.size - 1
+                when(subject) {
+                    subjects[0] -> ListItem(context, textToSpeech, subject, 20, navController = navController, route = Screens.Topics.route)
+                    subjects[subjectsSize] -> ListItem(context, textToSpeech, subject, 0, 20, navController =  navController, route = Screens.Topics.route)
+                    else -> ListItem(context, textToSpeech, subject, navController = navController, route = Screens.Topics.route)
                 }
             }
         }
     }
 }
-
 
 fun vibrateDevice(context: Context) {
     val vibrator = getSystemService(context, Vibrator::class.java)
@@ -213,7 +132,7 @@ val topics = listOf(
 @Composable
 fun CoursesScreenPreview() {
     Prototype1Theme {
-        CourseScreen()
+        //CourseScreen()
     }
 }
 

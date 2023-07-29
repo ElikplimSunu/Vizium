@@ -45,9 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.sunueric.prototype1.R
+import com.sunueric.prototype1.ui.theme.dmSans
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,7 +61,7 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 @Composable
-fun ReaderScreen() {
+fun ReaderScreen(navController: NavController) {
     val context = LocalContext.current
 
     var isPlaying by remember { mutableStateOf(false) }
@@ -71,7 +74,7 @@ fun ReaderScreen() {
     // Create a mutable state for the loading state
     var loading by remember { mutableStateOf(true) }
 
-    val readerText = extractTextFromPdf("assets/creative-arts-primary-4-6gh.pdf")
+    val readerText = extractTextFromPdf("assets/english_language.pdf")
 
     LaunchedEffect(Unit) {
         // Generate the audio file path at the beginning
@@ -126,7 +129,7 @@ fun ReaderScreen() {
             .width(353.dp)
             .height(581.dp)) {
 
-            DisplayPdfText(pdfPath = "assets/creative-arts-primary-4-6gh.pdf")
+            DisplayPdfText(pdfPath = "assets/english_language.pdf")
 
         }
 
@@ -181,6 +184,7 @@ private fun DisplayingExtractedText(readerText: String) {
         Text(
             text = "Overview",
             style = TextStyle(
+                fontFamily = dmSans,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -193,6 +197,7 @@ private fun DisplayingExtractedText(readerText: String) {
             Text(
                 text = "English Language",
                 style = TextStyle(
+                    fontFamily = dmSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF68769F),
@@ -202,6 +207,7 @@ private fun DisplayingExtractedText(readerText: String) {
             Text(
                 text = readerText,
                 style = TextStyle(
+                    fontFamily = dmSans,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color(0xFF1B2559),
@@ -284,7 +290,7 @@ fun extractTextFromPdf(path: String): String {
         val totalNumberOfPages = pdfReader.numberOfPages
 
         // Loop through each page and extract the text.
-        for (pageNumber in 1..1) {
+        for (pageNumber in 0 until totalNumberOfPages) {
             val textFromPage = PdfTextExtractor.getTextFromPage(pdfReader, pageNumber + 1)
             stringBuilder.append(textFromPage)
         }
@@ -483,5 +489,5 @@ private fun resumeText(mediaPlayer: MediaPlayer, scope: CoroutineScope) {
 @Preview (showBackground = true)
 @Composable
 fun ReaderScreenPreview() {
-    ReaderScreen()
+    ReaderScreen(navController = rememberNavController())
 }

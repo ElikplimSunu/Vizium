@@ -1,8 +1,6 @@
 package com.sunueric.prototype1.ui.composables
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Vibrator
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
@@ -28,13 +26,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import com.sunueric.prototype1.R
+import com.sunueric.prototype1.ui.theme.dmSans
 
 /** This function is used to create a list item.
  *  @param context is the context of the activity.
  *  @param textToSpeech is the text to speech object.
  *  @param chunk is the text to be spoken.
- *  @param activity is the activity to be started.
  **/
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,7 +43,8 @@ fun ListItem(
     chunk: String,
     paddingTop: Int = 0,
     paddingBottom: Int = 0,
-    activity: Activity
+    navController: NavController,
+    route: String
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -65,10 +65,19 @@ fun ListItem(
                         Toast
                             .makeText(
                                 context,
-                                "One Tap",
+                                chunk,
                                 Toast.LENGTH_SHORT
                             )
                             .show()
+
+
+                        textToSpeech.speak(
+                            chunk,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            ""
+                        )
+
                     },
                     onDoubleClick = {
                         Toast
@@ -79,29 +88,17 @@ fun ListItem(
                             )
                             .show()
 
-                        context.startActivity(
-                            Intent(
-                                context,
-                                activity::class.java
-                            )
-                        )
-                    },
-                    onLongClick = {
-                        Toast
-                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
-                            .show()
                         ContextCompat.getSystemService(
                             context,
                             Vibrator::class.java
                         )?.vibrate(100)
 
-                        textToSpeech.speak(
-                            chunk,
-                            TextToSpeech.QUEUE_FLUSH,
-                            null,
-                            ""
-                        )
-
+                        navController.navigate(route)
+                    },
+                    onLongClick = {
+                        Toast
+                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 )
                 .padding(20.dp),
@@ -110,6 +107,7 @@ fun ListItem(
         ) {
             Text(
                 modifier = Modifier.weight(5f), text = chunk, style = TextStyle(
+                    fontFamily = dmSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1B2559)

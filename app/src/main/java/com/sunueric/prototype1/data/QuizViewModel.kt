@@ -1,4 +1,4 @@
-//package com.sunueric.prototype1
+package com.sunueric.prototype1.data//package com.sunueric.prototype1
 //
 //import androidx.lifecycle.LiveData
 //import androidx.lifecycle.MutableLiveData

@@ -49,30 +49,30 @@ fun CustomNavBar(navController: NavHostController){
     val navStackBackEntry by navController.currentBackStackEntryAsState()
 
     val currentDestination = navStackBackEntry?.destination
-        Surface(
-            color = Color(0xFF1B2559),
-            shape = RoundedCornerShape(36.dp),
+    Surface(
+        color = Color(0xFF1B2559),
+        shape = RoundedCornerShape(36.dp),
+        modifier = Modifier
+            .width(170.dp)
+            .height(80.dp)
+            .padding(10.dp)
+    ) {
+        Row(
             modifier = Modifier
-                .width(170.dp)
-                .height(80.dp)
-                .padding(10.dp)
+                .fillMaxSize(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                iconToScreens.forEach { (iconRes, screens) ->
-                    AddItemGroup(
-                        iconRes = iconRes,
-                        screens = screens,
-                        currentDestination = currentDestination,
-                        navController = navController
-                    )
-                }
+            iconToScreens.forEach { (iconRes, screens) ->
+                AddItemGroup(
+                    iconRes = iconRes,
+                    screens = screens,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
             }
         }
+    }
 }
 
 @Composable

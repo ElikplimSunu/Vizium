@@ -22,6 +22,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,13 +35,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sunueric.prototype1.R
+import com.sunueric.prototype1.data.SharedViewModel
+import com.sunueric.prototype1.data.Topic
 import com.sunueric.prototype1.ui.theme.dmSans
 import com.sunueric.prototype1.ui.utils.Screens
+import java.util.Locale
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TopicsScreen(navController: NavController){
+fun TopicsScreen(navController: NavController,  viewModel: SharedViewModel){
+    // Observe the selectedCourse LiveData to get the selected course
+    val selectedCourse by viewModel.selectedCourse.observeAsState()
+
+    // Fetch the selected course and its topics
+    val course = selectedCourse ?: return
+    val topics = course.topics
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,7 +112,7 @@ fun TopicsScreen(navController: NavController){
                 )
                 .padding(20.dp)) {
                 Text(
-                    text = "Overview",
+                    text = topics[0].name.lowercase().capitalize(Locale.ROOT),
                     style = TextStyle(
                         fontFamily = dmSans,
                         fontSize = 24.sp,
@@ -117,16 +130,18 @@ fun TopicsScreen(navController: NavController){
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.weight(5f),
-                        text = "English Language",
-                        style = TextStyle(
-                            fontFamily = dmSans,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1B2559)
-                        ).copy(lineHeight = 23.sp)
-                    )
+                    selectedCourse?.let{course ->
+                        Text(
+                            modifier = Modifier.weight(5f),
+                            text = course.name,
+                            style = TextStyle(
+                                fontFamily = dmSans,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF1B2559)
+                            ).copy(lineHeight = 23.sp)
+                        )
+                    }
                     Image(
                         modifier = Modifier.weight(1f),
                         painter = painterResource(id = R.drawable.play_button),
@@ -136,21 +151,20 @@ fun TopicsScreen(navController: NavController){
             }
         }
 
-        Topics(navController)
+        Topics(topics = topics, navController = navController)
     }
 }
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Topics(navController: NavController) {
+fun Topics(topics: List<Topic>, navController: NavController) {
 
     val context = LocalContext.current
 
     val textToSpeech = TextToSpeech(context, null)
 
     val lazyListState = rememberLazyListState()
-
     LazyColumn(
         modifier = Modifier
             .background(color = Color(0xFFF8FAFB)),
@@ -159,16 +173,49 @@ fun Topics(navController: NavController) {
         state = lazyListState
     ) {
 
-        items(topics) { chunk ->
+        items(topics) { topic ->
             Column(modifier = Modifier.background(color = Color(0xFFF8FAFB))) {
                 // This is to add a padding to the top of the first item
                 val lastTopic = topics.size - 1
-                when(chunk) {
-                    topics[0] -> ListItem(context, textToSpeech, chunk, 20, navController = navController, route = Screens.Reader.route)
-                    topics[lastTopic] -> ListItem(context, textToSpeech, chunk, 0, 20, navController = navController, route = Screens.Reader.route)
-                    else -> ListItem(context, textToSpeech, chunk, navController = navController, route = Screens.Reader.route)
+                when (topic) {
+                    topics[0] -> TopicItem(
+                        context,
+                        textToSpeech,
+                        paddingTop = 20,
+                        topic = topic,
+                        navController = navController,
+                        route = Screens.Reader.route
+                    )
+
+                    topics[lastTopic] -> TopicItem(
+                        context,
+                        textToSpeech,
+                        topic = topic,
+                        navController = navController,
+                        route = Screens.Reader.route
+                    )
+
+                    else -> TopicItem(
+                        context,
+                        textToSpeech,
+                        topic = topic,
+                        navController = navController,
+                        route = Screens.Reader.route
+                    )
                 }
             }
         }
     }
 }
+
+
+
+val subjects = listOf(
+    "English",
+    "Integrated Science",
+    "Mathematics",
+    "Social Studies",
+    "Religious and Moral Education",
+    "ICT",
+    "French"
+)

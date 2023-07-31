@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.sunueric.prototype1.R
+import com.sunueric.prototype1.data.Course
+import com.sunueric.prototype1.data.SharedViewModel
+import com.sunueric.prototype1.data.Topic
 import com.sunueric.prototype1.ui.theme.dmSans
 
 /** This function is used to create a list item.
@@ -35,16 +38,17 @@ import com.sunueric.prototype1.ui.theme.dmSans
  *  @param textToSpeech is the text to speech object.
  *  @param chunk is the text to be spoken.
  **/
+
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-fun ListItem(
+fun GradeItem(
     context: Context,
     textToSpeech: TextToSpeech,
     chunk: String,
     paddingTop: Int = 0,
     paddingBottom: Int = 0,
     navController: NavController,
-    route: String
+    route: String,
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -94,6 +98,7 @@ fun ListItem(
                         )?.vibrate(100)
 
                         navController.navigate(route)
+
                     },
                     onLongClick = {
                         Toast
@@ -119,6 +124,188 @@ fun ListItem(
                 contentDescription = "Play course"
             )
         }
+    }
+}
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+fun CourseItem(
+    context: Context,
+    textToSpeech: TextToSpeech,
+    chunk: String,
+    paddingTop: Int = 0,
+    paddingBottom: Int = 0,
+    navController: NavController,
+    route: String,
+    viewModel: SharedViewModel,
+    course: Course
+) {
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = paddingBottom.dp)
 
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .combinedClickable(
+                    onClick = {
+                        Toast
+                            .makeText(
+                                context,
+                                chunk,
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+
+
+                        textToSpeech.speak(
+                            chunk,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            ""
+                        )
+
+                    },
+                    onDoubleClick = {
+                        Toast
+                            .makeText(
+                                context,
+                                "Double Tap",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+
+                        ContextCompat.getSystemService(
+                            context,
+                            Vibrator::class.java
+                        )?.vibrate(100)
+
+
+                        // Set the selected course in the SharedViewModel
+                        viewModel.setSelectedCourse(course)
+
+                        navController.navigate(route)
+
+                    },
+                    onLongClick = {
+                        Toast
+                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                )
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(5f), text = chunk, style = TextStyle(
+                    fontFamily = dmSans,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1B2559)
+                ).copy(lineHeight = 23.sp)
+            )
+            Image(
+                modifier = Modifier.weight(1f),
+                painter = painterResource(id = R.drawable.play_button),
+                contentDescription = "Play course"
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun TopicItem (
+    context: Context,
+    textToSpeech: TextToSpeech,
+    topic: Topic,
+    paddingTop: Int = 0,
+    paddingBottom: Int = 0,
+    navController: NavController,
+    route: String
+    ) {
+
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = paddingBottom.dp)
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .combinedClickable(
+                    onClick = {
+                        Toast
+                            .makeText(
+                                context,
+                                topic.name,
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+
+
+                        textToSpeech.speak(
+                            topic.name,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            ""
+                        )
+
+                    },
+                    onDoubleClick = {
+                        Toast
+                            .makeText(
+                                context,
+                                "Double Tap",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+
+                        navController.navigate(route)
+
+                        ContextCompat.getSystemService(
+                            context,
+                            Vibrator::class.java
+                        )?.vibrate(100)
+
+
+                    },
+                    onLongClick = {
+                        Toast
+                            .makeText(context, "Long Tap", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                )
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(5f), text = topic.name, style = TextStyle(
+                    fontFamily = dmSans,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1B2559)
+                ).copy(lineHeight = 23.sp)
+            )
+            Image(
+                modifier = Modifier.weight(1f),
+                painter = painterResource(id = R.drawable.play_button),
+                contentDescription = "Play course"
+            )
+        }
     }
 }

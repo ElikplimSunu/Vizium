@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.sunueric.prototype1.ui.composables.ListItem
+import com.sunueric.prototype1.ui.composables.GradeItem
 import com.sunueric.prototype1.ui.theme.Prototype1Theme
 import com.sunueric.prototype1.ui.theme.dmSans
 import com.sunueric.prototype1.ui.utils.Screens
@@ -90,41 +90,35 @@ fun Grades(navController: NavController) {
                 // This is to add a padding to the top of the first item
                 val gradesSize = grades.size - 1
                 when(grade) {
-                    grades[0] -> ListItem(context, textToSpeech, grade, 20, navController = navController, route = Screens.Courses.route)
-                    grades[gradesSize] -> ListItem(context, textToSpeech, grade, 0, 20, navController =  navController, route = Screens.Courses.route)
-                    else -> ListItem(context, textToSpeech, grade, navController = navController, route = Screens.Courses.route)
+                    grades[0] -> GradeItem(
+                        context,
+                        textToSpeech,
+                        grade,
+                        20,
+                        navController = navController,
+                        route = Screens.Courses.route
+                    )
+                    grades[gradesSize] -> GradeItem(
+                        context,
+                        textToSpeech,
+                        grade,
+                        0,
+                        20,
+                        navController =  navController,
+                        route = Screens.Courses.route
+                    )
+                    else -> GradeItem(
+                        context,
+                        textToSpeech,
+                        grade,
+                        navController = navController,
+                        route = Screens.Courses.route
+                    )
                 }
             }
         }
     }
 }
-
-
-val subjects = listOf(
-    "English",
-    "Mathematics",
-    "Social Studies",
-    "Integrated Science",
-    "Religious and Moral Education",
-    "French",
-    "ICT",
-    "Biology",
-    "Chemistry",
-    "Physics",
-    "Economics",
-)
-
-val topics = listOf(
-    "Sentence Structure",
-    "Parts of Speech",
-    "Tenses",
-    "Pronouns",
-    "Verbs",
-    "Nouns",
-    "Adjectives",
-    "Adverbs",
-    "Prepositions"
-)
 
 val grades = listOf(
     "Primary 1",
@@ -134,7 +128,6 @@ val grades = listOf(
     "Primary 5",
     "Primary 6"
 )
-
 
 @Preview(showBackground = true)
 @Composable

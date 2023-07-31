@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -26,14 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavController
-import com.sunueric.prototype1.ui.screens.subjects
+import com.sunueric.prototype1.data.Course
+import com.sunueric.prototype1.data.SharedViewModel
 import com.sunueric.prototype1.ui.theme.Prototype1Theme
 import com.sunueric.prototype1.ui.theme.dmSans
 import com.sunueric.prototype1.ui.utils.Screens
 
 
 @Composable
-fun CoursesScreen (navController: NavController) {
+fun CoursesScreen (navController: NavController,  viewModel: SharedViewModel) {
+    val courses by viewModel.courses.observeAsState(emptyList())
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,13 +71,13 @@ fun CoursesScreen (navController: NavController) {
             )
         }
 
-        Courses(navController = navController)
+        Courses(navController = navController, courses = courses, viewModel = viewModel)
     }
 }
 
 
 @Composable
-fun Courses(navController: NavController) {
+fun Courses(navController: NavController, courses: List<Course>, viewModel: SharedViewModel) {
 
     val context = LocalContext.current
 
@@ -89,14 +94,38 @@ fun Courses(navController: NavController) {
         state = lazyListState
     ) {
 
-        items(subjects) { subject ->
+        items(courses) { subject ->
             Column(modifier = Modifier.background(color = Color(0xFFF8FAFB))) {
                 // This is to add a padding to the top of the first item
-                val subjectsSize = subjects.size - 1
+                val subjectsSize = courses.size - 1
                 when(subject) {
-                    subjects[0] -> ListItem(context, textToSpeech, subject, 20, navController = navController, route = Screens.Topics.route)
-                    subjects[subjectsSize] -> ListItem(context, textToSpeech, subject, 0, 20, navController =  navController, route = Screens.Topics.route)
-                    else -> ListItem(context, textToSpeech, subject, navController = navController, route = Screens.Topics.route)
+                    courses[0] -> CourseItem(
+                        context,
+                        textToSpeech,
+                        subject.name,
+                        20,
+                        navController = navController,
+                        route = Screens.Topics.route,
+                        viewModel = viewModel,
+                        course = subject)
+                    courses[subjectsSize] -> CourseItem(
+                        context,
+                        textToSpeech,
+                        subject.name,
+                        0,
+                        20,
+                        navController =  navController,
+                        route = Screens.Topics.route,
+                        viewModel = viewModel,
+                        course = subject)
+                    else -> CourseItem(
+                        context,
+                        textToSpeech,
+                        subject.name,
+                        navController = navController,
+                        route = Screens.Topics.route,
+                        viewModel = viewModel,
+                        course = subject)
                 }
             }
         }
@@ -115,17 +144,6 @@ fun vibrateDevice(context: Context) {
     }
 }
 
-val topics = listOf(
-    "Sentence Structure",
-    "Parts of Speech",
-    "Tenses",
-    "Pronouns",
-    "Verbs",
-    "Nouns",
-    "Adjectives",
-    "Adverbs",
-    "Prepositions"
-)
 
 
 @Preview(showBackground = true)

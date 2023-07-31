@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,10 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.sunueric.prototype1.R
+import com.sunueric.prototype1.data.SharedViewModel
 import com.sunueric.prototype1.ui.theme.dmSans
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +62,8 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 @Composable
-fun ReaderScreen(navController: NavController) {
+fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
+    val selectedTopicBody by viewModel.selectedTopicBody.observeAsState("")
     val context = LocalContext.current
 
     var isPlaying by remember { mutableStateOf(false) }
@@ -489,5 +491,5 @@ private fun resumeText(mediaPlayer: MediaPlayer, scope: CoroutineScope) {
 @Preview (showBackground = true)
 @Composable
 fun ReaderScreenPreview() {
-    ReaderScreen(navController = rememberNavController())
+//    ReaderScreen(navController = rememberNavController())
 }

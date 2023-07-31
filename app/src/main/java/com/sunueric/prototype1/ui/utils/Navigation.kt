@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sunueric.prototype1.data.SharedViewModel
 import com.sunueric.prototype1.ui.composables.CoursesScreen
 import com.sunueric.prototype1.ui.composables.CustomNavBar
 import com.sunueric.prototype1.ui.composables.QuizScreen
@@ -22,11 +23,14 @@ import com.sunueric.prototype1.ui.screens.HomepageScreen
 import com.sunueric.prototype1.ui.utils.Screens
 
 @Composable
-fun Navigation() {
+fun Navigation(viewModel: SharedViewModel) {
     val navController = rememberNavController()
 
+
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.White), // Set the background color here
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -44,9 +48,12 @@ fun Navigation() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it) // Utilize the padding here
+                    .padding(it)
             ) {
-                BottomNavGraph(navController = navController)
+                BottomNavGraph(
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
         }
     }
@@ -54,7 +61,8 @@ fun Navigation() {
 
 @Composable
 fun BottomNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SharedViewModel
 ) {
     NavHost(
         navController = navController,
@@ -66,15 +74,23 @@ fun BottomNavGraph(
         }
         composable(route = Screens.Courses.route)
         {
-            CoursesScreen(navController = navController)
+            CoursesScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.Topics.route)
+        composable(route = Screens.Topics.route
+//            arguments = listOf(
+//                navArgument("course") {
+//                    type = NavType.StringType
+//                    defaultValue = "Course"
+//                    nullable = true
+//                },
+//            )
+        )
         {
-            TopicsScreen(navController = navController)
+            TopicsScreen(navController = navController, viewModel = viewModel)
         }
         composable(route = Screens.Reader.route)
         {
-            ReaderScreen(navController = navController)
+            ReaderScreen(navController = navController, viewModel = viewModel)
         }
         composable(route = Screens.Quiz.route)
         {
@@ -82,7 +98,7 @@ fun BottomNavGraph(
         }
         composable(route = Screens.QuizResult.route)
         {
-            CoursesScreen(navController = navController)
+            CoursesScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

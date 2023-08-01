@@ -13,7 +13,7 @@ data class Course(
     val pdfFilePath: String, // Path to the PDF file for the course
     val topics: List<Topic> = emptyList()
 )
-data class Topic(val name: String, val body: String)
+data class Topic( val name: String, val body: String)
 
 class SharedViewModel : ViewModel() {
 
@@ -26,10 +26,20 @@ class SharedViewModel : ViewModel() {
     private val _topics = MutableLiveData<List<Topic>>()
     val topics: LiveData<List<Topic>> get() = _topics
 
+    private val _isTalkBackEnabled = MutableLiveData<Boolean>()
+    val isTalkBackEnabled: LiveData<Boolean> get() = _isTalkBackEnabled
+
+
     private val _selectedTopicBody = MutableLiveData<String>()
     val selectedTopicBody: LiveData<String> get() = _selectedTopicBody
 
+    private val _selectedTopic = MutableLiveData<Topic>()
+    val selectedTopic: LiveData<Topic> get() = _selectedTopic
+
     init {
+        // Set the initial value for talkBackEnabled
+        _isTalkBackEnabled.value = false
+
         // Fetch courses from the data source and set them in the ViewModel
         viewModelScope.launch(Dispatchers.IO) {
             val coursesList = listOf(
@@ -53,29 +63,19 @@ class SharedViewModel : ViewModel() {
 
     fun setSelectedCourse(course: Course) {
         _selectedCourse.value = course
-        // Fetch topics for the selected course (You can modify this based on your data source)
         _topics.value = course.topics
     }
 
-    fun setSelectedTopicBody(body: String) {
-        _selectedTopicBody.value = body
+    fun setTalkBackEnabled(isEnabled: Boolean) {
+        _isTalkBackEnabled.value = isEnabled
+    }
+
+    fun setSelectedTopic(topic: Topic) {
+        _selectedTopic.value = topic
+        _selectedTopicBody.value = topic.body
     }
 }
 
-class NavigationViewModel : ViewModel() {
-    private val _selectedCourse = MutableLiveData<Course>()
-    val selectedCourse: LiveData<Course> get() = _selectedCourse
-
-    private val _topics = MutableLiveData<List<Topic>>()
-    val topics: LiveData<List<Topic>> get() = _topics
-
-    // Function to set the selected course and fetch its topics
-    fun setSelectedCourse(course: Course) {
-        _selectedCourse.value = course
-        // Fetch topics for the selected course (You can modify this based on your data source)
-        _topics.value = course.topics
-    }
-}
 
 val courses = listOf(
     Course("English Language", "assets/english_language.pdf"),

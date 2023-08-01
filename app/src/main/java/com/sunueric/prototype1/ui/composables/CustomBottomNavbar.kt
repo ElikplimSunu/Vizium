@@ -30,7 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sunueric.prototype1.R
 
 @Composable
-fun CustomNavBar(navController: NavHostController){
+fun CustomNavBar(navController: NavHostController) {
 
 
     val iconToScreens = mapOf(

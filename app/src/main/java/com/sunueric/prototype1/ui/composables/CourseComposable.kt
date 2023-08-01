@@ -36,7 +36,10 @@ import com.sunueric.prototype1.ui.utils.Screens
 
 
 @Composable
-fun CoursesScreen (navController: NavController,  viewModel: SharedViewModel) {
+fun CoursesScreen(navController: NavController, viewModel: SharedViewModel) {
+    // Observe the isTalkBackEnabled LiveData using the observeAsState() composable
+    val isTalkBackEnabled by viewModel.isTalkBackEnabled.observeAsState()
+
     val courses by viewModel.courses.observeAsState(emptyList())
 
     Column(
@@ -71,13 +74,23 @@ fun CoursesScreen (navController: NavController,  viewModel: SharedViewModel) {
             )
         }
 
-        Courses(navController = navController, courses = courses, viewModel = viewModel)
+        Courses(
+            navController = navController,
+            courses = courses,
+            viewModel = viewModel,
+            isTalkBackEnabled = isTalkBackEnabled
+        )
     }
 }
 
 
 @Composable
-fun Courses(navController: NavController, courses: List<Course>, viewModel: SharedViewModel) {
+fun Courses(
+    navController: NavController,
+    courses: List<Course>,
+    viewModel: SharedViewModel,
+    isTalkBackEnabled: Boolean?
+) {
 
     val context = LocalContext.current
 
@@ -98,34 +111,39 @@ fun Courses(navController: NavController, courses: List<Course>, viewModel: Shar
             Column(modifier = Modifier.background(color = Color(0xFFF8FAFB))) {
                 // This is to add a padding to the top of the first item
                 val subjectsSize = courses.size - 1
-                when(subject) {
+                when (subject) {
                     courses[0] -> CourseItem(
                         context,
                         textToSpeech,
-                        subject.name,
                         20,
                         navController = navController,
                         route = Screens.Topics.route,
                         viewModel = viewModel,
-                        course = subject)
+                        course = subject,
+                        isTalkBackEnabled = isTalkBackEnabled
+                    )
+
                     courses[subjectsSize] -> CourseItem(
                         context,
                         textToSpeech,
-                        subject.name,
                         0,
                         20,
-                        navController =  navController,
-                        route = Screens.Topics.route,
-                        viewModel = viewModel,
-                        course = subject)
-                    else -> CourseItem(
-                        context,
-                        textToSpeech,
-                        subject.name,
                         navController = navController,
                         route = Screens.Topics.route,
                         viewModel = viewModel,
-                        course = subject)
+                        course = subject,
+                        isTalkBackEnabled = isTalkBackEnabled
+                    )
+
+                    else -> CourseItem(
+                        context,
+                        textToSpeech,
+                        navController = navController,
+                        route = Screens.Topics.route,
+                        viewModel = viewModel,
+                        course = subject,
+                        isTalkBackEnabled = isTalkBackEnabled
+                    )
                 }
             }
         }
@@ -143,7 +161,6 @@ fun vibrateDevice(context: Context) {
         }
     }
 }
-
 
 
 @Preview(showBackground = true)

@@ -24,7 +24,12 @@ fun extractingTopicsFromPdf(pdfFilePath: String): List<Topic> {
                 if (lines[i].trim().startsWith("CHAPTER", ignoreCase = false)) {
                     //Store the previous topic if it exists
                     if (topicName.isNotEmpty() && topicBody.isNotEmpty()) {
-                        topics.add(Topic(topicName, topicBody.trim())) // Trim topicBody to remove extra spaces
+                        topics.add(
+                            Topic(
+                                topicName,
+                                topicBody.trim()
+                            )
+                        ) // Trim topicBody to remove extra spaces
                     }
 
                     //Start of a new topic

@@ -40,10 +40,12 @@ fun QuizScreen() {
 //    val viewModel = viewModel<QuizViewModel>()
 //    val quizQuestions by viewModel.quizQuestions.observeAsState(initial = emptyList())
 
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color(0xFFF8FAFB))
-        .padding(20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFF8FAFB))
+            .padding(20.dp)
+    ) {
         Text(
             text = "English Language",
             style = TextStyle(
@@ -112,7 +114,11 @@ fun QuizScreen() {
                     when (options) {
                         optionsForQuiz[0] -> QuizOption(option = options, paddingTop = 20)
 //                            , onClick = { viewModel.setUserAnswer(options) })
-                        optionsForQuiz[optionsSize] -> QuizOption(option = options, paddingBottom = 16)
+                        optionsForQuiz[optionsSize] -> QuizOption(
+                            option = options,
+                            paddingBottom = 16
+                        )
+
                         else -> QuizOption(option = options)
                     }
                 }
@@ -122,11 +128,12 @@ fun QuizScreen() {
 
 }
 
-val optionsForQuiz = listOf (
+val optionsForQuiz = listOf(
     "(A) First option",
     "(B) Second option",
     "(C) Third option",
-    "(D) Fourth option")
+    "(D) Fourth option"
+)
 
 
 @Preview(showBackground = true)

@@ -33,10 +33,12 @@ import com.sunueric.prototype1.ui.theme.dmSans
 fun QuizResultScreen() {
     val score = 8
 
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color(0xFFF8FAFB))
-        .padding(20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFF8FAFB))
+            .padding(20.dp)
+    ) {
         Text(
             text = "English Language",
             style = TextStyle(
@@ -55,9 +57,11 @@ fun QuizResultScreen() {
                 in 1..7 -> {
                     "You can do better"
                 }
+
                 in 8..10 -> {
                     "Congratulations!"
                 }
+
                 else -> {
                     "Something went wrong"
                 }
@@ -84,9 +88,11 @@ fun QuizResultScreen() {
                 .height(213.dp)
                 .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 20.dp))
         ) {
-            Column (modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 40.dp), horizontalAlignment = Alignment.CenterHorizontally){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 40.dp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "Your score",
                     style = TextStyle(
@@ -112,7 +118,7 @@ fun QuizResultScreen() {
                             append("/")
                         }
                         append("10")
-                                                },
+                    },
                     style = TextStyle(
                         fontSize = 64.sp,
                         fontFamily = dmSans,
@@ -126,7 +132,7 @@ fun QuizResultScreen() {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        LazyColumn{
+        LazyColumn {
 
         }
     }

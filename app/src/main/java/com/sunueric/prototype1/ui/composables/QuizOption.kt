@@ -23,7 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.sunueric.prototype1.ui.theme.dmSans
 
 @Composable
-fun QuizOption (
+fun QuizOption(
     option: String,
     paddingTop: Int = 0,
     paddingBottom: Int = 0,
@@ -59,12 +59,13 @@ fun QuizOption (
                 )
             )
 
-            RadioButton(modifier = Modifier
-                .constrainAs(radioButton) {
-                    end.linkTo(parent.end, margin = 10.dp)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }, selected = false,
+            RadioButton(
+                modifier = Modifier
+                    .constrainAs(radioButton) {
+                        end.linkTo(parent.end, margin = 10.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }, selected = false,
 //                onClick = onClick,
                 onClick = { /*TODO*/ },
                 colors = RadioButtonDefaults.colors(

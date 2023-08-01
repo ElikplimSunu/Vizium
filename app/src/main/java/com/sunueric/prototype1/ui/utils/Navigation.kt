@@ -70,26 +70,17 @@ fun BottomNavGraph(
     ) {
         composable(route = Screens.Grades.route)
         {
-            HomepageScreen(navController)
+            HomepageScreen(navController, viewModel)
         }
         composable(route = Screens.Courses.route)
         {
             CoursesScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.Topics.route
-//            arguments = listOf(
-//                navArgument("course") {
-//                    type = NavType.StringType
-//                    defaultValue = "Course"
-//                    nullable = true
-//                },
-//            )
-        )
+        composable(route = Screens.Topics.route)
         {
             TopicsScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.Reader.route)
-        {
+        composable(route = Screens.Reader.route) {
             ReaderScreen(navController = navController, viewModel = viewModel)
         }
         composable(route = Screens.Quiz.route)

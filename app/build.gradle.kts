@@ -63,6 +63,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.itextg)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.core.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.runtime)
     //implementation(libs.retrofit)

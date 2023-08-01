@@ -62,7 +62,7 @@ fun HomepageScreen(navController: NavController, viewModel: SharedViewModel) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(70.dp)
+                horizontalArrangement = Arrangement.spacedBy(80.dp)
             ) {
                 Text(
                     text = "Homepage",
@@ -118,7 +118,7 @@ fun SwitchWithLabel(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label)
+        Text(text = label, style = TextStyle(fontFamily = dmSans, fontSize = 16.sp, color = Color.Black))
         Switch(
             checked = isChecked,
             onCheckedChange = onCheckedChange,

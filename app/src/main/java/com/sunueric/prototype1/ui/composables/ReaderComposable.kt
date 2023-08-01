@@ -42,12 +42,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.sunueric.prototype1.R
 import com.sunueric.prototype1.data.SharedViewModel
+import com.sunueric.prototype1.data.Topic
+import com.sunueric.prototype1.ui.theme.dmSans
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -65,12 +70,52 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
     val selectedTopic = viewModel.selectedTopic.observeAsState()
 
     // Fetch the selected course and its topics
-    val topic = selectedTopic
-    val readerText = topic.value?.body
-    val topicName = topic.value?.name
+    val readerText = selectedTopic.value?.body
+    val topicName = selectedTopic.value?.name
     val course = viewModel.selectedCourse.value?.name
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+    // Get the list of topics from the view model
+    val topics = viewModel.topics.observeAsState()
+
+    val mediaPlayer = remember { MediaPlayer() }
+
+    // Track the current topic index
+    var currentTopicIndex by rememberSaveable { mutableIntStateOf(0) }
+
+    // Function to navigate to the next topic
+    fun nextTopic() {
+        // Stop and release the current media player
+        if (isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+            isPlaying = false
+        }
+
+        currentTopicIndex++
+        if (currentTopicIndex >= (topics.value?.size ?: 0)) {
+            currentTopicIndex = 0 // Wrap around to the first topic if reaching the end
+        }
+        viewModel.setSelectedTopic(topics.value?.get(currentTopicIndex) ?: Topic("", ""))
+    }
+
+    // Function to navigate to the previous topic
+    fun previousTopic() {
+        // Stop and release the current media player
+        if (isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+            isPlaying = false
+        }
+        currentTopicIndex--
+        if (currentTopicIndex < 0) {
+            currentTopicIndex = (topics.value?.size ?: 0) - 1 // Wrap around to the last topic if at the beginning
+        }
+        viewModel.setSelectedTopic(topics.value?.get(currentTopicIndex) ?: Topic("", ""))
+    }
+
+    ConstraintLayout(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color(0xFFE5E5E5))) {
         val (cardDesignLeft, cardDesignRight, textCard, playButton) = createRefs()
         Box(modifier = Modifier
             .constrainAs(cardDesignLeft) {
@@ -130,14 +175,28 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick = {
-                        textToSpeech.speak(readerText, TextToSpeech.QUEUE_FLUSH, null, null)
+                        skipBehind(mediaPlayer)
                     },
                     modifier = Modifier
                         .size(56.dp)
                 ) {
                     Icon(
-                        painterResource(id = R.drawable.icon_previous_button),
-                        contentDescription = "Previous line button",
+                        painterResource(id = R.drawable.reverse_5_secs),
+                        contentDescription = "Skip 5 seconds behind",
+                        tint = Color(0xFF68769F)
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        previousTopic()
+                    },
+                    modifier = Modifier
+                        .size(56.dp)
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.skip_previous),
+                        contentDescription = "Previous topic",
                         tint = Color(0xFF68769F)
                     )
                 }
@@ -146,19 +205,34 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                     context,
                     isPlaying,
                     onTogglePlayPause = { isPlaying = it },
-                    readerText!!
+                    readerText!!,
+                    mediaPlayer
                 )
 
                 IconButton(
                     onClick = {
-                        textToSpeech.speak(readerText, TextToSpeech.QUEUE_FLUSH, null, null)
+                        nextTopic()
                     },
                     modifier = Modifier
                         .size(56.dp)
                 ) {
                     Icon(
-                        painterResource(id = R.drawable.icon_forward_button),
-                        contentDescription = "Next line button",
+                        painterResource(id = R.drawable.skip_next),
+                        contentDescription = "Next topic",
+                        tint = Color(0xFF68769F)
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        skipAhead(mediaPlayer)
+                    },
+                    modifier = Modifier
+                        .size(56.dp)
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.forward_5_secs),
+                        contentDescription = "Skip 5 seconds ahead",
                         tint = Color(0xFF68769F)
                     )
                 }
@@ -176,6 +250,7 @@ private fun DisplayingExtractedText(readerText: String, topicName: String, cours
             style = TextStyle(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = dmSans,
                 color = Color.Black
             ).copy(lineHeight = 32.sp)
         )
@@ -187,6 +262,7 @@ private fun DisplayingExtractedText(readerText: String, topicName: String, cours
                 text = courseName,
                 style = TextStyle(
                     fontSize = 18.sp,
+                    fontFamily = dmSans,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF68769F),
                 ).copy(lineHeight = 23.sp)
@@ -196,6 +272,7 @@ private fun DisplayingExtractedText(readerText: String, topicName: String, cours
                 text = readerText,
                 style = TextStyle(
                     fontSize = 16.sp,
+                    fontFamily = dmSans,
                     fontWeight = FontWeight.Normal,
                     color = Color(0xFF1B2559),
                 ).copy(lineHeight = 20.sp)
@@ -222,10 +299,9 @@ fun PauseAndPlayButton(
     context: Context = LocalContext.current.applicationContext,
     isPlaying: Boolean,
     onTogglePlayPause: (Boolean) -> Unit,
-    readerText: String
+    readerText: String,
+    mediaPlayer: MediaPlayer
 ) {
-
-    val mediaPlayer = remember { MediaPlayer() }
     val tts = remember { TextToSpeech(context, null) }
     val scope = rememberCoroutineScope()
     var audioFilePath by rememberSaveable { mutableStateOf("") }
@@ -334,6 +410,16 @@ private fun generateSpeechAudio(context: Context, tts: TextToSpeech, text: Strin
     return audioFile.absolutePath
 }
 
+private fun skipBehind(mediaPlayer: MediaPlayer) {
+    val currentPosition = mediaPlayer.currentPosition
+    mediaPlayer.seekTo(currentPosition - 5000) // Subtract 5 seconds (5000 milliseconds) from the current position
+}
+
+private fun skipAhead(mediaPlayer: MediaPlayer) {
+    val currentPosition = mediaPlayer.currentPosition
+    mediaPlayer.seekTo(currentPosition + 5000) // Add 5 seconds (5000 milliseconds) to the current position
+}
+
 private fun playText(
     mediaPlayer: MediaPlayer,
     filePath: String,
@@ -384,6 +470,8 @@ private fun pauseText(
     onTogglePlayPause(false)
 }
 
+
+
 private fun computeWordIndex(text: String, position: Int): Int {
     val words = text.split(" ")
     var wordIndex = 0
@@ -398,6 +486,8 @@ private fun computeWordIndex(text: String, position: Int): Int {
     return wordIndex
 }
 
-private fun resumeText(mediaPlayer: MediaPlayer, scope: CoroutineScope) {
-    mediaPlayer.start()
+@Preview(showBackground = true)
+@Composable
+fun ReaderScreenPreview() {
+    ReaderScreen(navController = rememberNavController(), viewModel = viewModel())
 }

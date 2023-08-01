@@ -18,6 +18,7 @@ import com.sunueric.prototype1.ui.composables.CoursesScreen
 import com.sunueric.prototype1.ui.composables.CustomNavBar
 import com.sunueric.prototype1.ui.composables.QuizScreen
 import com.sunueric.prototype1.ui.composables.ReaderScreen
+import com.sunueric.prototype1.ui.composables.SplashScreen
 import com.sunueric.prototype1.ui.composables.TopicsScreen
 import com.sunueric.prototype1.ui.screens.HomepageScreen
 import com.sunueric.prototype1.ui.utils.Screens
@@ -66,8 +67,9 @@ fun BottomNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Grades.route
+        startDestination = Screens.SpashScreen.route
     ) {
+
         composable(route = Screens.Grades.route)
         {
             HomepageScreen(navController, viewModel)
@@ -90,6 +92,10 @@ fun BottomNavGraph(
         composable(route = Screens.QuizResult.route)
         {
             CoursesScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(route = Screens.SpashScreen.route)
+        {
+            SplashScreen(navController)
         }
     }
 }

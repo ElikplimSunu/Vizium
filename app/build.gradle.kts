@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.accompanist.systemuicontroller)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.runtime)
     //implementation(libs.retrofit)

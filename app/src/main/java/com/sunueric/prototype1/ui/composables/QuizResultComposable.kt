@@ -31,7 +31,7 @@ import com.sunueric.prototype1.ui.theme.dmSans
 
 @Composable
 fun QuizResultScreen() {
-    val score = 8
+    val score = 5
 
     Column(
         modifier = Modifier

@@ -67,7 +67,7 @@ fun BottomNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.SpashScreen.route
+        startDestination = Screens.SplashScreen.route
     ) {
 
         composable(route = Screens.Grades.route)
@@ -93,7 +93,7 @@ fun BottomNavGraph(
         {
             CoursesScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.SpashScreen.route)
+        composable(route = Screens.SplashScreen.route)
         {
             SplashScreen(navController)
         }

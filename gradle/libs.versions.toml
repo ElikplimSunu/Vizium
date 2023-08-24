@@ -31,6 +31,12 @@ room-runtime = "2.6.0-alpha02"
 preference-ktx = "1.2.0"
 androidx-core-ktx = "1.12.0-alpha05"
 accompanist-systemuicontroller = "0.31.6-rc"
+ktor-client-core = "2.3.3"
+ktor-client-json = "2.3.3"
+ktor-client-serialization = "2.3.3"
+ktor-client-android = "2.3.3"
+ktor-client-content-negotiation = "2.3.3"
+ktor-serialization-kotlinx-json = "2.3.3"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
@@ -76,6 +82,12 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-client-core" }
+ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor-client-json" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor-client-serialization" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-client-android" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-client-content-negotiation" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-serialization-kotlinx-json" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

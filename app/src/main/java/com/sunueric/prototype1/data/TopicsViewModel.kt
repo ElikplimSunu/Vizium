@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sunueric.prototype1.ui.utils.extractingTopicsFromPdf
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class Course(
@@ -36,8 +39,22 @@ class SharedViewModel : ViewModel() {
     private val _selectedTopic = MutableLiveData<Topic>()
     val selectedTopic: LiveData<Topic> get() = _selectedTopic
 
+    private val _isLoading = MutableStateFlow<Boolean>(true)
+    val isLoading = _isLoading.asStateFlow()
+
+
+
     init {
+        // Set the initial value for isLoading
+        // This is just to simulate a delay in fetching data from the data source
+        // This is necessary for the splash screen
+        viewModelScope.launch {
+            delay(2500)
+            _isLoading.value = false
+        }
+
         // Set the initial value for talkBackEnabled
+        // This is for the accessibility switch in the settings screen
         _isTalkBackEnabled.value = false
 
         // Fetch courses from the data source and set them in the ViewModel
@@ -75,11 +92,4 @@ class SharedViewModel : ViewModel() {
         _selectedTopicBody.value = topic.body
     }
 }
-
-
-val courses = listOf(
-    Course("English Language", "assets/english_language.pdf"),
-    //Course("Mathematics", "path/to/mathematics.pdf"),
-    // Add other courses here
-)
 

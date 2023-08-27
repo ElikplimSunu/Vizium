@@ -4,6 +4,7 @@ apache-pdfbox = "2.0.27"
 constraintlayout-compose = "1.1.0-alpha11"
 github-android-pdf-viewer = "3.2.0-beta.1"
 github-pdfbox-android = "1.8.16.0"
+google-services = "4.3.15"
 gradle = "8.2.0-alpha15"
 itextg = "5.5.10"
 kotlin = "1.8.10"
@@ -37,6 +38,12 @@ ktor-client-serialization = "2.3.3"
 ktor-client-android = "2.3.3"
 ktor-client-content-negotiation = "2.3.3"
 ktor-serialization-kotlinx-json = "2.3.3"
+core-splashscreen = "1.1.0-alpha01"
+androidx-core-splashscreen = "1.0.1"
+hilt-android = "2.47"
+hilt-compiler = "2.47"
+hilt-android-compiler = "2.47"
+firebase-auth-ktx = "22.1.1"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
@@ -51,6 +58,7 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 barteksc-android-pdf-viewer = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "github-android-pdf-viewer" }
 ben-eggers-pdfbox-android = { module = "io.github.ben-eggers:pdfbox-android", version.ref = "github-pdfbox-android" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 itextg = { module = "com.itextpdf:itextg", version.ref = "itextg" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -88,6 +96,12 @@ ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serializati
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-client-android" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-client-content-negotiation" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-serialization-kotlinx-json" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-core-splashscreen" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt-compiler" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-android-compiler" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebase-auth-ktx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

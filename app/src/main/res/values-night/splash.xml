@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/black</item>
 
-    <style name="Theme.Prototype1" parent="android:Theme.Material.Light.NoActionBar"/>
-
-<style name="Theme.SplashScreenAndroid12" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/vizium_logo_name</item>
+
         <item name="postSplashScreenTheme">@style/Theme.Prototype1</item>
     </style>
-
-
-
 </resources>

@@ -61,7 +61,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 const val openAIEndpoint = "https://api.openai.com/v1/completions"
 const val apiKey =
-    "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" // Replace with your actual API key
+    "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" // Replace with your API key
 
 val httpClient = HttpClient {
     install(ContentNegotiation) {
@@ -178,8 +178,21 @@ fun QuizScreen() {
 
      //Display loading animation if the API response is not received
     if (!apiResponseReceived) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            RippleLoadingAnimation()
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White), contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                RippleLoadingAnimation()
+                Text(text = "Generating quiz, please wait...",
+                    style = TextStyle(
+                        fontFamily = dmSans,
+                        fontSize = 18.sp,
+                        color = Color(0xFF1B2559),
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+
         }
         return
     } else {

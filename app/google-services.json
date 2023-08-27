@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "601363767389",
+    "project_id": "viziumprototype",
+    "storage_bucket": "viziumprototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601363767389:android:33411fcc5306b84169adb4",
+        "android_client_info": {
+          "package_name": "com.sunueric.prototype1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601363767389-4tl65db4h51cp8aindrl2j6n8sliibhc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sunueric.prototype1",
+            "certificate_hash": "d29903a8f743ed59ac76bc8c3f93806ca8a2e2c7"
+          }
+        },
+        {
+          "client_id": "601363767389-m2rs6pfav9dsth9m53kmcr9bjo62l5g5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_tYOjdN2G1io1Zg8QxFc-GGU3aQDsjss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601363767389-m2rs6pfav9dsth9m53kmcr9bjo62l5g5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,17 +14,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sunueric.prototype1.data.SharedViewModel
+import com.sunueric.prototype1.ui.auth.AuthViewModel
 import com.sunueric.prototype1.ui.composables.CoursesScreen
 import com.sunueric.prototype1.ui.composables.CustomNavBar
 import com.sunueric.prototype1.ui.composables.QuizScreen
 import com.sunueric.prototype1.ui.composables.ReaderScreen
-import com.sunueric.prototype1.ui.composables.SplashScreen
 import com.sunueric.prototype1.ui.composables.TopicsScreen
 import com.sunueric.prototype1.ui.screens.HomepageScreen
+import com.sunueric.prototype1.ui.screens.SignInScreen
+import com.sunueric.prototype1.ui.screens.SignUpScreen
 import com.sunueric.prototype1.ui.utils.Screens
 
 @Composable
-fun Navigation(viewModel: SharedViewModel) {
+fun Navigation(viewModel: SharedViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
 
 
@@ -53,7 +55,8 @@ fun Navigation(viewModel: SharedViewModel) {
             ) {
                 BottomNavGraph(
                     navController = navController,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    authViewModel
                 )
             }
         }
@@ -63,13 +66,21 @@ fun Navigation(viewModel: SharedViewModel) {
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    viewModel: SharedViewModel
+    viewModel: SharedViewModel,
+    authViewModel: AuthViewModel
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.SplashScreen.route
+        startDestination = Screens.SignIn.route
     ) {
-
+        composable(route = Screens.SignUp.route)
+        {
+            SignUpScreen(authViewModel, navController)
+        }
+        composable(route = Screens.SignIn.route)
+        {
+            SignInScreen(authViewModel, navController)
+        }
         composable(route = Screens.Grades.route)
         {
             HomepageScreen(navController, viewModel)
@@ -92,10 +103,6 @@ fun BottomNavGraph(
         composable(route = Screens.QuizResult.route)
         {
             CoursesScreen(navController = navController, viewModel = viewModel)
-        }
-        composable(route = Screens.SplashScreen.route)
-        {
-            SplashScreen(navController)
         }
     }
 }

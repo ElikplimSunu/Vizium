@@ -290,9 +290,9 @@ fun SignUpContent(
                     }
                 }
             }
-        }  
         }
     }
+}
 
 @Composable
 fun CustomCheckbox(text: String) {
@@ -354,15 +354,15 @@ fun CustomClickableText(text: String, clickableText: String, onClick: () -> Unit
             }
         }
     )
-    
-    }
+
+}
 
 @Composable
 fun GoogleButton(modifier: Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = modifier
-        .height(50.dp),
+            .height(50.dp),
         shape = RoundedCornerShape(6.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF000000),

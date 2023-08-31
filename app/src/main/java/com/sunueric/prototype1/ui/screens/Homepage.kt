@@ -73,15 +73,15 @@ fun HomepageScreen(
                 .padding(start = 20.dp, end = 20.dp, top = 60.dp, bottom = 25.dp)
         ) {
 //            Button(onClick = { pushSampleDataToFirestore(viewModel = coursesViewModel!!) }) {
-                Text(
-                    text = "What Class Are You In?",
-                    style = TextStyle(
-                        fontSize = 30.sp,
-                        fontFamily = dmSans,
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFF000000),
-                    )
+            Text(
+                text = "What Class Are You In?",
+                style = TextStyle(
+                    fontSize = 30.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFF000000),
                 )
+            )
 //            }
 
             Text(

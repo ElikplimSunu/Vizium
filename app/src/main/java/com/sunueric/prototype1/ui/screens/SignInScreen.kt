@@ -76,7 +76,7 @@ fun SignInScreen(
             SignInContent(viewModel, innerPadding, snackbarHostState, navController)
         }
     )
-    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,7 +142,7 @@ fun SignInContent(viewModel: AuthViewModel?,
                     color = Color.Gray,
                 )
             )
-                    },
+            },
             placeholder = { Text(
                 text = "johndoe@example.com",
                 style = TextStyle(

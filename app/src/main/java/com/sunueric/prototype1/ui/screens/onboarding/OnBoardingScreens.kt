@@ -41,7 +41,7 @@ fun FirstOnBoardingScreen(navController: NavController?) {
             .clip(shape = RoundedCornerShape(bottomStart = 200.dp, bottomEnd = 200.dp))
             .background(Color.White),
             contentAlignment = Alignment.Center
-            ) {
+        ) {
             Image(painter = painterResource(id = R.drawable.onboarding_1), contentDescription = "")
         }
 

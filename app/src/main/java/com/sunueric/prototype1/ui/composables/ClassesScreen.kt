@@ -204,7 +204,7 @@ fun ClassesScreen() {
                         .height(65.dp)
                         .fillMaxWidth()
                         .weight(1f),
-                        shape = RoundedCornerShape(size = 6.dp),
+                    shape = RoundedCornerShape(size = 6.dp),
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Black
                     )

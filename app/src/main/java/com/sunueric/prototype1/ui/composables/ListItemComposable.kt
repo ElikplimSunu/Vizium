@@ -7,11 +7,13 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -55,12 +57,13 @@ fun GradeItem(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
+            defaultElevation = 6.dp
         ),
-        shape = RoundedCornerShape(20.dp),
         modifier = Modifier
+            .height(90.dp)
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = paddingBottom.dp)
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
 
     ) {
         Row(
@@ -129,9 +132,9 @@ fun GradeItem(
             Text(
                 modifier = Modifier.weight(5f), text = chunk, style = TextStyle(
                     fontFamily = dmSans,
-                    fontSize = 18.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1B2559)
+                    color = Color.Black
                 ).copy(lineHeight = 23.sp)
             )
             Image(
@@ -160,10 +163,12 @@ fun CourseItem(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier
+            .height(90.dp)
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = paddingBottom.dp)
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
 
     ) {
         Row(
@@ -239,13 +244,13 @@ fun CourseItem(
                     fontFamily = dmSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1B2559)
+                    color = Color.Black
                 ).copy(lineHeight = 23.sp)
             )
             Image(
                 modifier = Modifier.weight(1f),
                 painter = painterResource(id = R.drawable.play_button),
-                contentDescription = "Play course"
+                contentDescription = "Play topic"
             )
         }
     }
@@ -265,13 +270,15 @@ fun FirstTopicItem(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
+            defaultElevation = 6.dp
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp)
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
             .background(color = Color.White)
+
     ) {
         Column(modifier = Modifier
             .background(color = Color.White)
@@ -379,7 +386,7 @@ fun FirstTopicItem(
                             fontFamily = dmSans,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1B2559)
+                            color = Color.Black
                         ).copy(lineHeight = 23.sp)
                     )
 
@@ -412,10 +419,12 @@ fun TopicItem(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = paddingBottom.dp)
+            .padding(start = 20.dp, end = 20.dp, top = paddingTop.dp, bottom = 20.dp)
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
+
 
     ) {
         Row(
@@ -494,7 +503,7 @@ fun TopicItem(
                     fontFamily = dmSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1B2559)
+                    color = Color.Black
                 ).copy(lineHeight = 23.sp)
             )
             Image(

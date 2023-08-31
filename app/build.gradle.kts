@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.core.splashscreen)
     implementation(libs.hilt.android)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
     kapt(libs.hilt.android.compiler)
     implementation(libs.firebase.auth.ktx)
     annotationProcessor(libs.androidx.room.compiler)

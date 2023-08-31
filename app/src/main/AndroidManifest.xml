@@ -28,14 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.CourseActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".ui.ReaderActivity"
-            android:exported="true">
-        </activity>
 
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
     </application>

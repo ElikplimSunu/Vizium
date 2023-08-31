@@ -1,6 +1,7 @@
 package com.sunueric.prototype1.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +40,9 @@ fun QuizOption(
                 ambientColor = Color(0x1F7090B0)
             )
             .height(80.dp)
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 20.dp))
+            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 6.dp))
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
+
     ) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (text, radioButton) = createRefs()
@@ -55,7 +58,7 @@ fun QuizOption(
                     fontFamily = dmSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(600),
-                    color = Color(0xFF68769F),
+                    color = Color.Black
                 )
             )
 
@@ -69,7 +72,7 @@ fun QuizOption(
 //                onClick = onClick,
                 onClick = { /*TODO*/ },
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = Color(0xFF1B2559),
+                    selectedColor = Color.Black,
                     unselectedColor = Color(0xFF68769F)
                 )
             )

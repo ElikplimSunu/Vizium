@@ -1,6 +1,7 @@
 package com.sunueric.prototype1.ui.screens
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,6 +43,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -49,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sunueric.prototype1.R
 import com.sunueric.prototype1.ui.auth.AuthViewModel
+import com.sunueric.prototype1.ui.theme.dmSans
 import com.sunueric.prototype1.ui.utils.Screens
 import com.sunueric.testingapicall2.data.Resource
 import kotlinx.coroutines.launch
@@ -86,12 +94,22 @@ fun SignInContent(viewModel: AuthViewModel?,
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(29.dp)){
+        .padding(start = 29.dp, end = 29.dp, top = 29.dp, bottom = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally){
+
+        Image(
+            modifier = Modifier
+                .size(100.dp),
+            painter = painterResource(id = R.drawable.vizium_logo),
+            contentDescription = "Vizium app logo"
+        )
+
         Text(
             text = "Hello! Welcome back!",
             style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight(400),
+                fontSize = 30.sp,
+                fontFamily = dmSans,
+                fontWeight = FontWeight(700),
                 color = Color(0xFF000000),
             )
         )
@@ -99,37 +117,86 @@ fun SignInContent(viewModel: AuthViewModel?,
         Spacer(modifier = Modifier.height(9.dp))
 
         Text(
-            text = "Hello again, You’ve been missed!",
+            text = "Continue your learning journey with us",
             style = TextStyle(
-                fontSize = 13.sp,
-                fontWeight = FontWeight(400),
+                fontSize = 16.sp,
+                fontFamily = dmSans,
+                fontWeight = FontWeight(500),
                 color = Color(0xFFA8A2A2),
             )
         )
 
-        Spacer(modifier = Modifier.height(39.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp),
-            label = { Text(text = "Email Address") },
-            placeholder = { Text(text = "johndoe@example.com") },
+                .height(80.dp),
+            label = { Text(
+                text = "Email Address",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color.Gray,
+                )
+            )
+                    },
+            placeholder = { Text(
+                text = "johndoe@example.com",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFFA8A2A2),
+                )
+            ) },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                focusedIndicatorColor = Color.Black,
+            ),
             value = email.value,
             onValueChange = { email.value = it },
-            singleLine = true
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false,
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
         )
 
-        Spacer(modifier = Modifier.height(38.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp),
-            label = { Text(text = "Password") },
-            placeholder = { Text(text = "password") },
+                .height(80.dp),
+            label = { Text(
+                text = "Password",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color.Gray,
+                )
+            )
+            },
+            placeholder = { Text(
+                text = "password",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFFA8A2A2),
+                )
+            ) },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                focusedIndicatorColor = Color.Black,
+            ),
             value = password.value,
             onValueChange = { password.value = it },
             singleLine = true,
@@ -141,10 +208,16 @@ fun SignInContent(viewModel: AuthViewModel?,
                         contentDescription = if (passwordVisibility) "Hide password" else "Show password"
                     )
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false,
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            )
         )
 
-        Spacer(modifier = Modifier.height(38.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Row (modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -156,9 +229,10 @@ fun SignInContent(viewModel: AuthViewModel?,
             Text(
                 text = "Forgot Password?",
                 style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color.Blue
+                    fontSize = 16.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color.Blue,
                 ),
                 textAlign = TextAlign.End,
                 modifier = Modifier
@@ -173,6 +247,10 @@ fun SignInContent(viewModel: AuthViewModel?,
                 .fillMaxWidth()
                 .height(64.dp),
             shape = RoundedCornerShape(6.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF000000),
+                contentColor = Color.White
+            ),
             onClick = {
                 viewModel?.login(email.value.text, password.value.text)
             }) {
@@ -188,7 +266,15 @@ fun SignInContent(viewModel: AuthViewModel?,
 
                 else -> {
                     // Otherwise, display the "Sign Up" text
-                    Text("Sign In")
+                    Text(
+                        text = "Sign In",
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontFamily = dmSans,
+                            fontWeight = FontWeight(500),
+                            color = Color.White,
+                        )
+                    )
                 }
             }
         }
@@ -196,7 +282,7 @@ fun SignInContent(viewModel: AuthViewModel?,
 
         TextDivider(label = "Or Login with")
 
-        Spacer(modifier = Modifier.height(34.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
 
         Row(modifier = Modifier.fillMaxWidth(),
@@ -204,12 +290,12 @@ fun SignInContent(viewModel: AuthViewModel?,
 
             GoogleButton(Modifier.weight(1f), onClick = { /*TODO*/ })
 
-            Spacer(modifier = Modifier.width(40.dp))
+            Spacer(modifier = Modifier.width(30.dp))
 
             FacebookButton(Modifier.weight(1f), onClick = { /*TODO*/ })
         }
 
-        Spacer(modifier = Modifier.height(70.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         CustomClickableText(text = "Don’t have an account?", clickableText = "Sign Up", onClick = {
             navController.navigate(Screens.SignUp.route){

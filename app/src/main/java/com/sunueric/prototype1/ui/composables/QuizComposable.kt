@@ -61,7 +61,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 const val openAIEndpoint = "https://api.openai.com/v1/completions"
 const val apiKey =
-    "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" // Replace with your API key
+    "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" // Replace with your API key
 
 val httpClient = HttpClient {
     install(ContentNegotiation) {
@@ -187,7 +187,7 @@ fun QuizScreen() {
                     style = TextStyle(
                         fontFamily = dmSans,
                         fontSize = 18.sp,
-                        color = Color(0xFF1B2559),
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -204,16 +204,16 @@ fun QuizScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFFF8FAFB))
+                .background(color = Color.White)
                 .padding(20.dp)
         ) {
             Text(
                 text = "English Language",
                 style = TextStyle(
                     fontFamily = dmSans,
-                    fontSize = 18.sp,
+                    fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF68769F),
+                    color = Color(0xFF595959),
                 )
             )
 
@@ -224,9 +224,9 @@ fun QuizScreen() {
                 text = "Question ${questions.indexOf(questions[0]) + 1}",
                 style = TextStyle(
                     fontFamily = dmSans,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1B2559),
+                    color = Color.Black,
                 )
             )
 
@@ -236,12 +236,8 @@ fun QuizScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(213.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color(0xFFDFE4F3),
-                        shape = RoundedCornerShape(size = 20.dp)
-                    )
-                    .padding(20.dp)
+                    .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
+                .padding(20.dp)
             ) {
                 Text(
                     modifier = Modifier.fillMaxSize(),
@@ -249,9 +245,9 @@ fun QuizScreen() {
 //                quizQuestions.getOrNull(viewModel.currentQuestionIndex) ?: "",
                     style = TextStyle(
                         fontFamily = dmSans,
-                        fontSize = 22.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1B2559),
+                        color = Color.Black,
                     )
                 )
             }

@@ -50,12 +50,12 @@ fun CustomNavBar(navController: NavHostController) {
 
     val currentDestination = navStackBackEntry?.destination
     Surface(
-        color = Color(0xFF1B2559),
+        color = Color.Black,
         shape = RoundedCornerShape(36.dp),
         modifier = Modifier
             .width(170.dp)
             .height(80.dp)
-            .padding(10.dp)
+            .padding(8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -104,7 +104,7 @@ fun AddItemGroup(
             verticalAlignment = Alignment.CenterVertically, // Center the icons vertically
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            CustomIndicator(isSelected = isSelected, icon = iconRes, tint = Color(0xFFF6F8FD))
+            CustomIndicator(isSelected = isSelected, icon = iconRes, tint = Color.White)
         }
     }
 }
@@ -123,7 +123,7 @@ fun CustomIndicator(isSelected: Boolean, icon: Int, tint: Color) {
             modifier = Modifier
                 .size(15.dp)
                 .clip(CircleShape)
-                .background(color = Color(0xFFA3AED0))
+                .background(color = Color.White)
         )
     }
 }

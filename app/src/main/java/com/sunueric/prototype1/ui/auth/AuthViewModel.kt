@@ -36,8 +36,10 @@ class AuthViewModel @Inject constructor(
     private fun validateToken() {
         repository.currentUser?.getIdToken(false)?.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                // Token is invalid or expired. Log out the user.
-                repository.logout() // Use your existing logout function
+                viewModelScope.launch {
+                    // Token is invalid or expired. Log out the user.
+                    repository.logout()
+                }
             }
             // If the task is successful, then the token is valid. No further action required.
         }

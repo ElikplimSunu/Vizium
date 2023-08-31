@@ -61,7 +61,7 @@ class SharedViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val coursesList = listOf(
                 Course("English Language", "assets/english_language.pdf"),
-                Course("Mathematics", "path/to/mathematics.pdf"),
+                //Course("Mathematics", "path/to/mathematics.pdf"),
                 // Add other courses here with their respective PDF file paths
             )
 

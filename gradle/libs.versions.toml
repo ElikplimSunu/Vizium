@@ -44,6 +44,8 @@ hilt-android = "2.47"
 hilt-compiler = "2.47"
 hilt-android-compiler = "2.47"
 firebase-auth-ktx = "22.1.1"
+firebase-firestore-ktx = "24.7.1"
+firebase-storage-ktx = "20.2.1"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
@@ -102,6 +104,8 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt-compiler" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-android-compiler" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebase-auth-ktx" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebase-firestore-ktx" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebase-storage-ktx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

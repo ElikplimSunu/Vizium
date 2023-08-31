@@ -8,6 +8,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -115,7 +116,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
 
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
-        .background(color = Color(0xFFE5E5E5))) {
+        .background(color = Color.White)) {
         val (cardDesignLeft, cardDesignRight, textCard, playButton) = createRefs()
         Box(modifier = Modifier
             .constrainAs(cardDesignLeft) {
@@ -126,7 +127,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
             .padding(top = 217.dp, bottom = 186.dp)
             .background(
                 shape = RoundedCornerShape(bottomEnd = 20.dp),
-                color = Color(0xFFA3AED0)
+                color = Color(0xFF595959)
             )
             .width(48.dp)
             .height(600.dp))
@@ -140,7 +141,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
             .padding(top = 217.dp, bottom = 186.dp)
             .background(
                 shape = RoundedCornerShape(bottomStart = 20.dp),
-                color = Color(0xFFA3AED0)
+                color = Color(0xFF595959)
             )
             .width(48.dp)
             .height(600.dp))
@@ -153,7 +154,9 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                 bottom.linkTo(parent.bottom)
             }
             .padding(top = 60.dp, bottom = 211.dp)
-            .background(shape = RoundedCornerShape(20.dp), color = Color.White)
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 6.dp))
+
+            .background(shape = RoundedCornerShape(6.dp), color = Color.White)
             .padding(20.dp)
             .width(353.dp)
             .height(581.dp)) {
@@ -183,7 +186,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                     Icon(
                         painterResource(id = R.drawable.reverse_5_secs),
                         contentDescription = "Skip 5 seconds behind",
-                        tint = Color(0xFF68769F)
+                        tint = Color.Black
                     )
                 }
 
@@ -197,7 +200,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                     Icon(
                         painterResource(id = R.drawable.skip_previous),
                         contentDescription = "Previous topic",
-                        tint = Color(0xFF68769F)
+                        tint = Color.Black
                     )
                 }
 
@@ -219,7 +222,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                     Icon(
                         painterResource(id = R.drawable.skip_next),
                         contentDescription = "Next topic",
-                        tint = Color(0xFF68769F)
+                        tint = Color.Black
                     )
                 }
 
@@ -233,7 +236,7 @@ fun ReaderScreen(navController: NavController, viewModel: SharedViewModel) {
                     Icon(
                         painterResource(id = R.drawable.forward_5_secs),
                         contentDescription = "Skip 5 seconds ahead",
-                        tint = Color(0xFF68769F)
+                        tint = Color.Black
                     )
                 }
             }
@@ -261,20 +264,20 @@ private fun DisplayingExtractedText(readerText: String, topicName: String, cours
             Text(
                 text = courseName,
                 style = TextStyle(
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontFamily = dmSans,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF68769F),
+                    color = Color.Black,
                 ).copy(lineHeight = 23.sp)
             )
 
             Text(
                 text = readerText,
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontFamily = dmSans,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF1B2559),
+                    color = Color.Black,
                 ).copy(lineHeight = 20.sp)
             )
         }
@@ -344,7 +347,7 @@ fun PauseAndPlayButton(
                 false -> {
                     SetPlayPauseButtonIcons(
                         icon = R.drawable.play_button,
-                        iconDescription = "Play Song"
+                        iconDescription = "Play lesson"
                     )
                 }
             }
@@ -363,7 +366,7 @@ private fun SetPlayPauseButtonIcons(
         contentDescription = iconDescription,
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Inside,
-        colorFilter = ColorFilter.tint(Color(0xFF68769F))
+        colorFilter = ColorFilter.tint(Color.Black)
     )
 }
 

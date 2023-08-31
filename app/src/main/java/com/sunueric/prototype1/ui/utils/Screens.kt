@@ -8,6 +8,9 @@ sealed class Screens(val route: String) {
     object Topics : Screens("topics_screen")
     object Reader : Screens("reader_screen")
     object Quiz : Screens("quiz_screen")
+    object FirstOnBoadingScreen : Screens("first_onboarding_screen")
+    object SecondOnBoadingScreen : Screens("second_onboarding_screen")
+    object ThirdOnBoadingScreen : Screens("third_onboarding_screen")
 
     object QuizResult : Screens("quiz_result_screen")
 }

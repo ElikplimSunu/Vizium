@@ -45,7 +45,7 @@ fun CoursesScreen(navController: NavController, viewModel: SharedViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFF8FAFB))
+            .background(color = Color.White)
     ) {
         Column(
             modifier = Modifier
@@ -69,7 +69,7 @@ fun CoursesScreen(navController: NavController, viewModel: SharedViewModel) {
                     fontFamily = dmSans,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF68769F)
+                    color = Color(0xFF595959)
                 ).copy(lineHeight = 21.sp)
             )
         }
@@ -100,7 +100,7 @@ fun Courses(
 
     LazyColumn(
         modifier = Modifier
-            .background(color = Color(0xFFF8FAFB))
+            .background(color = Color.White)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
 
@@ -108,14 +108,13 @@ fun Courses(
     ) {
 
         items(courses) { subject ->
-            Column(modifier = Modifier.background(color = Color(0xFFF8FAFB))) {
+            Column(modifier = Modifier.background(color = Color.White)) {
                 // This is to add a padding to the top of the first item
                 val subjectsSize = courses.size - 1
                 when (subject) {
                     courses[0] -> CourseItem(
                         context,
                         textToSpeech,
-                        20,
                         navController = navController,
                         route = Screens.Topics.route,
                         viewModel = viewModel,
@@ -126,8 +125,6 @@ fun Courses(
                     courses[subjectsSize] -> CourseItem(
                         context,
                         textToSpeech,
-                        0,
-                        20,
                         navController = navController,
                         route = Screens.Topics.route,
                         viewModel = viewModel,

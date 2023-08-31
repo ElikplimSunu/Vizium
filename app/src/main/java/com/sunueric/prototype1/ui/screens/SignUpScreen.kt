@@ -2,6 +2,7 @@ package com.sunueric.prototype1.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,11 +15,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -50,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sunueric.prototype1.R
 import com.sunueric.prototype1.ui.auth.AuthViewModel
+import com.sunueric.prototype1.ui.theme.dmSans
 import com.sunueric.prototype1.ui.utils.Screens
 import com.sunueric.testingapicall2.data.Resource
 
@@ -96,33 +100,45 @@ fun SignUpContent(
     var checkedState by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
-        .fillMaxSize(),
+        .fillMaxSize()
+        .padding(29.dp),
         contentAlignment = Alignment.Center) {
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            Image(
+                modifier = Modifier
+                    .size(100.dp),
+                painter = painterResource(id = R.drawable.vizium_logo),
+                contentDescription = "Vizium app logo"
+            )
+
             Text(
-                text = "Create Account ",
+                text = "Hi, Let’s Make a Journey with Us",
                 style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight(500),
+                    fontSize = 30.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(700),
                     color = Color(0xFF000000),
+                    textAlign = TextAlign.Center
                 )
             )
 
             Spacer(modifier = Modifier.height(9.dp))
 
             Text(
-                text = "Connect with your Friends Today!",
+                text = "Let’s get you started with your studies",
                 style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF959AA1),
+                    fontSize = 16.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFFA8A2A2),
                 )
             )
 
-            Spacer(modifier = Modifier.height(39.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
                 modifier = Modifier
@@ -135,7 +151,7 @@ fun SignUpContent(
                 singleLine = true
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             OutlinedTextField(
                 modifier = Modifier
@@ -182,6 +198,10 @@ fun SignUpContent(
                     .fillMaxWidth()
                     .height(64.dp),
                 shape = RoundedCornerShape(6.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF000000),
+                    contentColor = Color.White
+                ),
                 onClick = {
                     viewModel?.signUp(name.value.text, email.value.text, password.value.text)
                 }) {
@@ -197,16 +217,24 @@ fun SignUpContent(
 
                     else -> {
                         // Otherwise, display the "Sign Up" text
-                        Text("Sign Up")
+                        Text(
+                            text = "Sign Up",
+                            style = TextStyle(
+                                fontSize = 22.sp,
+                                fontFamily = dmSans,
+                                fontWeight = FontWeight(500),
+                                color = Color.White,
+                            )
+                        )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(34.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             TextDivider(label = "Or Login with")
 
-            Spacer(modifier = Modifier.height(34.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -220,7 +248,7 @@ fun SignUpContent(
                 FacebookButton(Modifier.weight(1f), onClick = { /*TODO*/ })
             }
 
-            Spacer(modifier = Modifier.height(81.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             CustomClickableText(
                 text = "Already have an account? ",
@@ -247,7 +275,7 @@ fun SignUpContent(
                             snackbarHostState.showSnackbar(
                                 message = "Sign Up Successful"
                             )
-                            navController.navigate(Screens.Grades.route) {
+                            navController.navigate(Screens.FirstOnBoadingScreen.route) {
                                 popUpTo(Screens.SignUp.route) { inclusive = true }
                             }
                         }
@@ -277,12 +305,21 @@ fun CustomCheckbox(text: String) {
         horizontalArrangement = Arrangement.Start
     ) {
         Checkbox(
+            colors = CheckboxDefaults.colors(
+                checkedColor = Color.Black,
+            ),
             checked = checked,
             onCheckedChange = { checked = it }
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = text
+            text = text,
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontFamily = dmSans,
+                fontWeight = FontWeight(400),
+                color = Color.Black,
+            )
         )
     }
 }
@@ -290,48 +327,47 @@ fun CustomCheckbox(text: String) {
 @Composable
 fun CustomClickableText(text: String, clickableText: String, onClick: () -> Unit) {
 
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = Color(0xFFA2A6AC))) {
-            append(text)
+    val anotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(
+            fontSize = 18.sp,
+            fontFamily = dmSans,
+            fontWeight = FontWeight(400),
+            color = Color.Black
+        )) {
+            append("$text ")
         }
-
-        pushStringAnnotation(
-            tag = "click",
-            annotation = clickableText
-        )
-        withStyle(style = SpanStyle(color = Color.Blue)) {
+        withStyle(style = SpanStyle(
+            fontSize = 18.sp,
+            fontFamily = dmSans,
+            fontWeight = FontWeight(400),
+            color = Color.Blue
+        )) {
             append(clickableText)
         }
-        pop()
     }
 
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        ClickableText(
-            text = annotatedString,
-            style = TextStyle(
-                fontSize = 15.sp,
-                fontWeight = FontWeight(600),
-                color = Color(0xFF188F79)
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-        ) { offset ->
-            annotatedString.getStringAnnotations(tag = "click", start = offset, end = offset)
-                .firstOrNull()?.let {
-                    onClick()
-                }
+    Text(
+        text = anotatedString,
+        modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures {
+                onClick.invoke()
+            }
         }
+    )
+    
     }
-}
 
 @Composable
 fun GoogleButton(modifier: Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = modifier
-        .height(46.dp),
-        shape = RoundedCornerShape(6.dp)
+        .height(50.dp),
+        shape = RoundedCornerShape(6.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF000000),
+            contentColor = Color.White
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -347,7 +383,13 @@ fun GoogleButton(modifier: Modifier, onClick: () -> Unit) {
             )
             Text(
                 text = "Google",
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color.White,
+                )
             )
         }
     }
@@ -358,8 +400,12 @@ fun FacebookButton(modifier: Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = modifier
-            .height(46.dp),
-        shape = RoundedCornerShape(6.dp)
+            .height(50.dp),
+        shape = RoundedCornerShape(6.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF000000),
+            contentColor = Color.White
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -375,7 +421,13 @@ fun FacebookButton(modifier: Modifier, onClick: () -> Unit) {
             )
             Text(
                 text = "Facebook",
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = dmSans,
+                    fontWeight = FontWeight(500),
+                    color = Color.White,
+                )
             )
         }
     }
@@ -397,9 +449,10 @@ fun TextDivider(label: String) {
         Text(
             text = label,
             style = TextStyle(
-                fontSize = 13.sp,
-                fontWeight = FontWeight(500),
-                color = Color(0xFF000000),
+                fontSize = 18.sp,
+                fontFamily = dmSans,
+                fontWeight = FontWeight(400),
+                color = Color.Black,
             )
         )
         Divider(
